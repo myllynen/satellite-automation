@@ -52,6 +52,7 @@ satellite_sync_plans:
   - name: Weekly Red Hat repository sync
     interval: weekly
     sync_date: 2022-01-01 02:02:00 UTC
+    enabled: true
     products:
       - Red Hat Satellite Capsule
       - Red Hat Enterprise Linux for x86_64
