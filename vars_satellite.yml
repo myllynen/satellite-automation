@@ -1,0 +1,71 @@
+#
+# Satellite install configuration
+#
+satellite_server_url: https://satellite.example.com
+
+satellite_organization: Acme Enterprises
+satellite_location: Test Lab
+
+satellite_validate_certs: true
+
+satellite_firewall_zone: public
+
+satellite_installer_custom_parameters: >
+  --no-colors
+  --disable-system-checks
+  --no-enable-foreman-plugin-discovery
+
+
+#
+# Satellite Products
+#
+satellite_products:
+  #
+  # Red Hat repositories
+  #
+  # RHEL repositories
+  - name: Red Hat Enterprise Linux for x86_64
+    repository_sets:
+      - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
+        releasever: 8
+      - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
+        releasever: 8
+
+      - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
+        releasever: 8.6
+      - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
+        releasever: 8.6
+
+      - name: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
+
+  # Satellite Capsule repositories
+  - name: Red Hat Satellite Capsule
+    repository_sets:
+      - name: Red Hat Satellite Capsule 6.11 for RHEL 8 x86_64 (RPMs)
+
+
+#
+# Satellite Sync Plans
+#
+satellite_sync_plans:
+  - name: Weekly Red Hat repository sync
+    interval: weekly
+    sync_date: 2022-01-01 02:02:00 UTC
+    products:
+      - Red Hat Satellite Capsule
+      - Red Hat Enterprise Linux for x86_64
+
+
+#
+# Satellite Lifecycle Environments
+#
+satellite_lifecycle_environments:
+  - name: Development
+    prior: Library
+
+  - name: Testing
+    prior: Development
+
+  - name: Production
+    prior: Testing

@@ -1,0 +1,9 @@
+---
+- name: Install Red Hat Satellite Capsule
+  hosts: capsules
+  become: true
+  vars_files:
+    - vault_satellite.yml
+  roles:
+    - capsule_generate_certs
+    - capsule_install

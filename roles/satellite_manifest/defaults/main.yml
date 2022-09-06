@@ -1,0 +1,21 @@
+---
+# Either copy a manifest file from the local system
+# or download directly from Red Hat Customer Portal
+satellite_manifest_download: false
+
+# Refresh manifest in Satellite
+satellite_manifest_refresh: false
+
+#
+# Required when copying manifest
+#
+# Manifest file to copy to target
+satellite_manifest_file: files/satellite_manifest.zip
+# Manifest path on the target host
+satellite_manifest_path: /root/satellite_manifest.zip
+
+#
+# Required when downloading manifest
+#
+# Manifest download UUID
+satellite_manifest_uuid:

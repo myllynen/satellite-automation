@@ -1,0 +1,6 @@
+[satellite]
+satellite.example.com
+
+[capsules]
+capsule1.example.com
+capsule2.example.com

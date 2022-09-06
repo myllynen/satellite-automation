@@ -1,0 +1,67 @@
+---
+- name: Enable Satellite module stream
+  command: dnf -y module enable satellite:el8
+  register: dnf_command
+  changed_when: "'Nothing to do' not in dnf_command.stdout"
+
+- name: Install Satellite packages
+  yum:
+    name:
+      - firewalld
+      - glibc-langpack-en
+      - hostname
+      - insights-client
+      - satellite
+      - sos
+    state: present
+
+- name: Enable firewalld service
+  service:
+    name: firewalld
+    enabled: true
+
+- name: Start firewalld service
+  service:
+    name: firewalld
+    state: started
+
+- name: Configure Satellite firewall
+  ansible.posix.firewalld:
+    zone: "{{ satellite_firewall_zone }}"
+    service: RH-Satellite-6
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Check Satellite status
+  redhat.satellite.status_info:
+    server_url: "{{ satellite_server_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    validate_certs: false
+  register: satellite_info
+  failed_when:
+    - "'msg' in satellite_info"
+    - "'Unauthorized' in satellite_info.msg"
+
+- name: Install Satellite
+  environment:
+    LC_ALL: en_US.UTF-8
+  command: >
+    satellite-installer --scenario satellite
+    --foreman-initial-admin-username "{{ satellite_username }}"
+    --foreman-initial-admin-password '{{ satellite_password }}'
+    --foreman-initial-organization "{{ satellite_organization }}"
+    --foreman-initial-location "{{ satellite_location }}"
+    {{ satellite_installer_custom_parameters }}
+  register: satellite_installer
+  when: >
+    ('msg' in satellite_info and "Connection refused" in satellite_info.msg) or
+    ('result' in satellite_info.status and satellite_info.status.result != "ok")
+
+- name: Verify Satellite status
+  redhat.satellite.status_info:
+    server_url: "{{ satellite_server_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    validate_certs: "{{ satellite_validate_certs }}"

@@ -1,0 +1,14 @@
+---
+- name: Upload Satellite manifest
+  hosts: satellite
+  become: true
+  vars:
+    satellite_manifest_download: false
+    satellite_manifest_file: files/satellite_manifest.zip
+    #satellite_manifest_uuid:
+    satellite_manifest_refresh: true
+  vars_files:
+    - vars_satellite.yml
+    - vault_satellite.yml
+  roles:
+    - satellite_manifest

@@ -1,0 +1,54 @@
+---
+- name: Copy local manifest to Satellite server
+  copy:
+    src: "{{ satellite_manifest_file }}"
+    dest: "{{ satellite_manifest_path }}"
+    mode: '0600'
+  register: manifest_copy
+  when: not satellite_manifest_download | bool
+
+- name: Check manifest file on Satellite server
+  stat:
+    path: "{{ satellite_manifest_path }}"
+  register: manifest_file
+  when: satellite_manifest_download | bool
+
+- name: Get manifest from Red Hat Customer Portal
+  redhat.satellite.redhat_manifest:
+    uuid: "{{ satellite_manifest_uuid }}"
+    username: "{{ satellite_redhat_portal_username }}"
+    password: "{{ satellite_redhat_portal_password }}"
+    path: "{{ satellite_manifest_path }}"
+  register: manifest_download
+  when:
+    - satellite_manifest_download | bool
+    - not manifest_file.stat.exists
+
+- name: Change manifest file permissions
+  file:
+    path: "{{ satellite_manifest_path }}"
+    mode: '0600'
+
+# Update to use "manifest_download is changed" in when once working
+# https://github.com/theforeman/foreman-ansible-modules/issues/1473
+- name: Upload manifest to Satellite
+  redhat.satellite.subscription_manifest:
+    server_url: "{{ satellite_server_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    organization: "{{ satellite_organization }}"
+    manifest_path: "{{ satellite_manifest_path }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    state: present
+  when: manifest_copy is changed or
+        (satellite_manifest_download | bool and not manifest_file.stat.exists)
+
+- name: Refresh Satellite manifest
+  redhat.satellite.subscription_manifest:
+    server_url: "{{ satellite_server_url }}"
+    username: "{{ satellite_username }}"
+    password: "{{ satellite_password }}"
+    organization: "{{ satellite_organization }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    state: refreshed
+  when: satellite_manifest_refresh | bool

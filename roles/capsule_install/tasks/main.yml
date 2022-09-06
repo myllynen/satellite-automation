@@ -1,0 +1,88 @@
+---
+- name: Enable Satellite Capsule module stream
+  command: dnf -y module enable satellite-capsule:el8
+  register: dnf_command
+  changed_when: "'Nothing to do' not in dnf_command.stdout"
+
+- name: Install Satellite Capsule packages
+  yum:
+    name:
+      - firewalld
+      - glibc-langpack-en
+      - hostname
+      - insights-client
+      - satellite-capsule
+      - sos
+    state: present
+
+- name: Enable firewalld service
+  service:
+    name: firewalld
+    enabled: true
+
+- name: Start firewalld service
+  service:
+    name: firewalld
+    state: started
+
+- name: Configure Satellite Capsule firewall
+  ansible.posix.firewalld:
+    zone: "{{ satellite_capsule_firewall_zone }}"
+    service: RH-Satellite-6-capsule
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Check Satellite Capsule status
+  uri:
+    url: https://{{ inventory_hostname }}:9090/features
+    method: GET
+    validate_certs: false
+  register: capsule_info
+  failed_when: false
+
+- name: Fetch Foreman settings from Satellite server
+  slurp:
+    src: /etc/foreman/settings.yaml
+  register: foreman_settings
+  delegate_to: "{{ groups.satellite[0] }}"
+  when: capsule_info.status != 200
+
+- name: Fetch Satellite Capsule certificates from Satellite server
+  slurp:
+    src: /root/{{ inventory_hostname }}-certs.tar
+  register: capsule_certs
+  delegate_to: "{{ groups.satellite[0] }}"
+  when: capsule_info.status != 200
+
+- name: Copy Satellite Capsule certificates to Satellite Capsule server
+  copy:
+    content: "{{ capsule_certs.content|b64decode }}"
+    dest: /root/{{ inventory_hostname }}-certs.tar
+    mode: '0600'
+  when: capsule_info.status != 200
+
+- name: Install Satellite Capsule
+  vars:
+    oauth_consumer_key: "{{ (foreman_settings.content|b64decode | regex_search('.*oauth_consumer_key.*')).split()[1] }}"
+    oauth_consumer_secret: "{{ (foreman_settings.content|b64decode | regex_search('.*oauth_consumer_secret.*')).split()[1] }}"
+  environment:
+    LC_ALL: en_US.UTF-8
+  command: >
+    satellite-installer --scenario capsule
+    --foreman-proxy-register-in-foreman true
+    --foreman-proxy-foreman-base-url https://{{ groups.satellite[0] }}
+    --foreman-proxy-trusted-hosts {{ groups.satellite[0] }}
+    --foreman-proxy-trusted-hosts {{ inventory_hostname }}
+    --foreman-proxy-oauth-consumer-key '{{ oauth_consumer_key }}'
+    --foreman-proxy-oauth-consumer-secret '{{ oauth_consumer_secret }}'
+    --certs-tar-file /root/{{ inventory_hostname }}-certs.tar
+    {{ satellite_capsule_installer_custom_parameters }}
+  when: capsule_info.status != 200
+
+- name: Verify Satellite Capsule status
+  uri:
+    url: https://{{ inventory_hostname }}:9090/features
+    method: GET
+    validate_certs: true
+  when: capsule_info.status != 200

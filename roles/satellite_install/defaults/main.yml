@@ -1,0 +1,14 @@
+---
+satellite_server_url:
+
+satellite_organization:
+satellite_location:
+
+satellite_validate_certs: true
+
+satellite_firewall_zone: public
+
+satellite_installer_custom_parameters: >
+  --no-colors
+  --disable-system-checks
+  --no-enable-foreman-plugin-discovery
