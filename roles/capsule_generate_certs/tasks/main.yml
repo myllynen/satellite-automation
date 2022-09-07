@@ -1,5 +1,6 @@
 ---
 - name: Generate Satellite Capsule certificates
+  # https://bugzilla.redhat.com/show_bug.cgi?id=2124283
   throttle: 1
   command:
     cmd: >
