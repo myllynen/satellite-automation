@@ -16,8 +16,8 @@
 - name: Get manifest from Red Hat Customer Portal
   redhat.satellite.redhat_manifest:
     uuid: "{{ satellite_manifest_uuid }}"
-    username: "{{ satellite_redhat_portal_username }}"
-    password: "{{ satellite_redhat_portal_password }}"
+    username: "{{ satellite_rhsm_username }}"
+    password: "{{ satellite_rhsm_password }}"
     path: "{{ satellite_manifest_path }}"
   register: manifest_download
   when:
