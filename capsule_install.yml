@@ -5,5 +5,5 @@
   vars_files:
     - vault_satellite.yml
   roles:
-    - capsule_generate_certs
-    - capsule_install
+    - myllynen.satellite_automation.capsule_generate_certs
+    - myllynen.satellite_automation.capsule_install

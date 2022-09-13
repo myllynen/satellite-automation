@@ -2,7 +2,7 @@
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-Ansible playbooks for Red Hat Satellite automation.
+Ansible playbooks and roles for Red Hat Satellite automation.
 
 ## Contents
 
@@ -34,6 +34,12 @@ install Satellite 6.11 on RHEL 8.6.
 
 ## Quick Usage Example
 
+To install this collection:
+
+```
+ansible-galaxy collection install git+https://github.com/myllynen/satellite-automation,master
+```
+
 Note that the playbooks to install Satellite and Capsules expect basics
 such as VMs, networking, DNS, timesync, repositories, and SELinux being
 configured in advance according to recommendations and
@@ -42,7 +48,7 @@ Use
 [rhel-system-roles](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles)
 and
 [rhel-ansible-roles](https://github.com/myllynen/rhel-ansible-roles)
-to apply these configurations as needed.
+to apply such basic configurations as needed.
 
 To install Red Hat Satellite, upload and refresh manifest, configure
 Satellite, and install Satellite Capsules:

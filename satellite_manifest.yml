@@ -11,4 +11,4 @@
     - vars_satellite.yml
     - vault_satellite.yml
   roles:
-    - satellite_manifest
+    - myllynen.satellite_automation.satellite_manifest
