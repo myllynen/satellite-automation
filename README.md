@@ -9,7 +9,7 @@ Ansible playbooks for Red Hat Satellite automation.
 * [inventory](inventory)
   * Example inventory
 * [vars_satellite.yml](vars_satellite.yml)
-  * Vars files for installing and configuring Satellite
+  * Vars file for installing and configuring Satellite
 * [vault_satellite.yml](vault_satellite.yml)
   * Unencrypted example vault file
 * [satellite_install.yml](satellite_install.yml)
@@ -25,8 +25,9 @@ Ansible playbooks for Red Hat Satellite automation.
 
 Depending on the environment and requirements, separate vars files,
 group vars, variables defined in an inventory, or some other approach
-might be warranted for providing Satellite configuration. These examples
-aim to provide a basic starting point for typical installations.
+might be warranted for providing Satellite configuration. These
+examples aim to provide a basic starting point for typical
+installations.
 
 These playbooks have been tested most recently using Ansible 2.12 to
 install Satellite 6.11 on RHEL 8.6.
