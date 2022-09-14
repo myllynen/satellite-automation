@@ -1,0 +1,9 @@
+---
+- name: Sync Satellite repositories
+  hosts: "{{ satellite | default('satellite') }}"
+  become: true
+  vars_files:
+    - "{{ inventory_dir + '/vars_satellite.yml' }}"
+    - "{{ inventory_dir + '/vault_satellite.yml' }}"
+  roles:
+    - myllynen.satellite_automation.satellite_sync_repositories

@@ -2,7 +2,8 @@
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-Ansible playbooks and roles for Red Hat Satellite automation.
+Ansible collection of playbooks and roles for Red Hat Satellite
+automation.
 
 ## Contents
 
@@ -12,15 +13,15 @@ Ansible playbooks and roles for Red Hat Satellite automation.
   * Vars file for installing and configuring Satellite
 * [vault_satellite.yml](vault_satellite.yml)
   * Unencrypted example vault file
-* [satellite_install.yml](satellite_install.yml)
+* [playbooks/satellite_install.yml](playbooks/satellite_install.yml)
   * Playbook to install Red Hat Satellite
-* [satellite_manifest](satellite_manifest.yml)
+* [playbooks/satellite_manifest](playbooks/satellite_manifest.yml)
   * Playbook to upload Satellite manifest
-* [satellite_configure.yml](satellite_configure.yml)
+* [playbooks/satellite_configure.yml](playbooks/satellite_configure.yml)
   * Playbook to configure Satellite
-* [satellite_sync_repos.yml](satellite_sync_repos.yml)
+* [playbooks/satellite_sync_repos.yml](playbooks/satellite_sync_repos.yml)
   * Playbook to sync repositories
-* [capsule_install.yml](capsule_install.yml)
+* [playbooks/capsule_install.yml](playbooks/capsule_install.yml)
   * Playbook to install Satellite Capsules
 
 Depending on the environment and requirements, separate vars files,
@@ -55,17 +56,17 @@ Satellite, and install Satellite Capsules:
 
 ```
 # Edit inventory and settings to suite local environment
-vi inventory vars_satellite.yml
+vi inventory vars_satellite.yml vault_satellite.yml
 # Install Red Hat Satellite
-ansible-playbook -i inventory satellite_install.yml
+ansible-playbook -i inventory myllynen.satellite_automation.satellite_install.yml
 # Upload and refresh manifest
-ansible-playbook -i inventory satellite_manifest.yml
+ansible-playbook -i inventory myllynen.satellite_automation.satellite_manifest.yml
 # Configure Satellite
-ansible-playbook -i inventory satellite_configure.yml
+ansible-playbook -i inventory myllynen.satellite_automation.satellite_configure.yml
 # Sync repositories
-ansible-playbook -i inventory satellite_sync_repos.yml
+ansible-playbook -i inventory myllynen.satellite_automation.satellite_sync_repos.yml
 # Install Satellite Capsules
-ansible-playbook -i inventory capsule_install.yml
+ansible-playbook -i inventory myllynen.satellite_automation.capsule_install.yml
 ```
 
 ## See Also
