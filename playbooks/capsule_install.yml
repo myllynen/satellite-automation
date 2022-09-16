@@ -2,8 +2,6 @@
 - name: Install Red Hat Satellite Capsule
   hosts: "{{ capsules | default('capsules') }}"
   become: true
-  vars_files:
-    - "{{ inventory_dir + '/vault_satellite.yml' }}"
   roles:
     - myllynen.satellite_automation.capsule_generate_certs
     - myllynen.satellite_automation.capsule_install
