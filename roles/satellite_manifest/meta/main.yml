@@ -1,0 +1,19 @@
+galaxy_info:
+  role_name: satellite_manifest
+  author: Marko Myllynen <myllynen@redhat.com>
+  company: Red Hat, Inc.
+  description: satellite_manifest role
+  license: GPLv3+
+  min_ansible_version: 2.9
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+  galaxy_tags:
+    - rhel
+    - satellite
+    - capsule
+    - automation
+    - configuration
+dependencies: []
