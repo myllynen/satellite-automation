@@ -11,4 +11,6 @@ satellite_firewall_zone: public
 satellite_installer_custom_parameters: >
   --no-colors
   --disable-system-checks
+  --enable-foreman-plugin-rh-cloud
   --no-enable-foreman-plugin-discovery
+  --foreman-proxy-plugin-remote-execution-ssh-install-key true
