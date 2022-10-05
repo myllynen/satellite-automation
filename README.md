@@ -42,8 +42,10 @@ ansible-galaxy collection install git+https://github.com/myllynen/satellite-auto
 ```
 
 Note that the playbooks to install Satellite and Capsules expect basics
-such as VMs, networking, DNS, timesync, repositories, and SELinux being
-configured in advance according to recommendations and
+such as VMs, networking, DNS, timesync,
+[repositories](https://github.com/myllynen/rhel-ansible-roles/tree/master/roles/repository_setup),
+and SELinux being configured in advance according to recommendations
+and
 [requirements](https://access.redhat.com/documentation/en-us/red_hat_satellite/).
 Use
 [rhel-system-roles](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles)
