@@ -24,11 +24,11 @@ automation.
 * [playbooks/capsule_install.yml](playbooks/capsule_install.yml)
   * Playbook to install Satellite Capsules
 
-Depending on the environment and requirements, separate vars files,
-group vars, variables defined in an inventory, or some other approach
-might be warranted for providing Satellite configuration. These
-examples aim to provide a basic starting point for typical
-installations.
+Depending on the environment and requirements separate playbooks and/or
+vars files, group vars, variables defined in an inventory, or some
+other approach might be appropriate for providing Satellite
+configuration. These examples aim to provide a basic starting point for
+typical installations.
 
 These playbooks have been tested most recently using Ansible 2.12 to
 install Satellite 6.11 on RHEL 8.6.
