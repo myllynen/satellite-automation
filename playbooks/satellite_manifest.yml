@@ -2,6 +2,7 @@
 - name: Upload Satellite manifest
   hosts: "{{ satellite | default('satellite') }}"
   become: true
+  gather_facts: true
   vars:
     satellite_manifest_download: false
     # Manifest file to copy to target

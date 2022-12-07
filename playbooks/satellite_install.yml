@@ -2,5 +2,6 @@
 - name: Install Red Hat Satellite
   hosts: "{{ satellite | default('satellite') }}"
   become: true
+  gather_facts: true
   roles:
     - myllynen.satellite_automation.satellite_install
