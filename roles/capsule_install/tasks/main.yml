@@ -1,6 +1,8 @@
 ---
 - name: Enable Satellite Capsule module stream
-  command: dnf -y module enable satellite-capsule:el8
+  command: >
+    dnf -y module enable
+    satellite-capsule:el{{ ansible_facts.distribution_major_version }}
   register: dnf_command
   changed_when: "'Nothing to do' not in dnf_command.stdout"
 

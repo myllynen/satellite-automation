@@ -44,7 +44,7 @@ satellite_products:
   # Satellite Capsule repositories
   - name: Red Hat Satellite Capsule
     repository_sets:
-      - name: Red Hat Satellite Capsule 6.11 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Capsule 6.12 for RHEL 8 x86_64 (RPMs)
 
 
 #

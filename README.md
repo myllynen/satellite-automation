@@ -31,7 +31,7 @@ configuration. These examples aim to provide a basic starting point for
 typical installations.
 
 These playbooks have been tested most recently using Ansible 2.12 to
-install Satellite 6.11 on RHEL 8.6.
+install Satellite 6.12 on RHEL 8.7.
 
 ## Quick Usage Example
 
