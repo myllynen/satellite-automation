@@ -13,7 +13,7 @@ satellite_manifest_path: /root/satellite_manifest.zip
 # Required when copying manifest
 #
 # Manifest file to copy to target
-satellite_manifest_file: files/satellite_manifest.zip
+satellite_manifest_file: satellite_manifest.zip
 
 #
 # Required when downloading manifest
