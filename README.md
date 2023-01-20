@@ -85,6 +85,9 @@ See also
 [https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite).
 
 See also
+[https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite_operations](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite_operations).
+
+See also
 [https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles).
 
 See also
