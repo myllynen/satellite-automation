@@ -60,19 +60,19 @@ Satellite, and install Satellite Capsules:
 # Edit inventory and settings to suite local environment
 vi inventory vars_satellite.yml vault_satellite.yml
 # Install Red Hat Satellite
-ansible-playbook -i inventory -e @vars_aap.yml -e @vault_aap.yml \
+ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
   myllynen.satellite_automation.satellite_install.yml
 # Upload and refresh manifest
-ansible-playbook -i inventory -e @vars_aap.yml -e @vault_aap.yml \
+ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
   myllynen.satellite_automation.satellite_manifest.yml
 # Configure Satellite
-ansible-playbook -i inventory -e @vars_aap.yml -e @vault_aap.yml \
+ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
   myllynen.satellite_automation.satellite_configure.yml
 # Sync repositories
-ansible-playbook -i inventory -e @vars_aap.yml -e @vault_aap.yml \
+ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
   myllynen.satellite_automation.satellite_sync_repos.yml
 # Install Satellite Capsules
-ansible-playbook -i inventory -e @vars_aap.yml -e @vault_aap.yml \
+ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
   myllynen.satellite_automation.capsule_install.yml
 ```
 
