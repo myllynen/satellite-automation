@@ -13,4 +13,3 @@ satellite_installer_custom_parameters: >
   --disable-system-checks
   --enable-foreman-plugin-rh-cloud
   --no-enable-foreman-plugin-discovery
-  --foreman-proxy-plugin-remote-execution-ssh-install-key true
