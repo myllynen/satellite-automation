@@ -18,6 +18,13 @@ satellite_installer_custom_parameters: >
 
 
 #
+# Satellite manifest configuration
+#
+satellite_manifest_download: false
+satellite_manifest_file: /root/satellite_manifest.zip
+
+
+#
 # Satellite Products
 #
 satellite_products:
