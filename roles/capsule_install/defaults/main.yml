@@ -1,7 +1,10 @@
 ---
 satellite_capsule_firewall_zone: public
 
+satellite_capsule_register_insights: false
+
 satellite_capsule_installer_custom_parameters: >
   --no-colors
   --disable-system-checks
   --enable-foreman-proxy-plugin-openscap
+  --no-enable-foreman-proxy-plugin-discovery

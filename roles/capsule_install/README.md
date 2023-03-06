@@ -4,6 +4,11 @@
 
 Please see the collection main page for a higher level description.
 
+This role uses Capsule certificate archives from Satellite at
+`/root/{{ inventory_hostname }}-certs.tar`. If the files do not
+exist yet then the `capsule_generate_certs` role can be used to
+create them.
+
 ## Configuration
 
 Below are the role default values from defaults/main.yml:
@@ -12,10 +17,13 @@ Below are the role default values from defaults/main.yml:
 ---
 satellite_capsule_firewall_zone: public
 
+satellite_capsule_register_insights: false
+
 satellite_capsule_installer_custom_parameters: >
   --no-colors
   --disable-system-checks
   --enable-foreman-proxy-plugin-openscap
+  --no-enable-foreman-proxy-plugin-discovery
 </pre>
 
 ## License

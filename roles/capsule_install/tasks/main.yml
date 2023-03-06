@@ -11,8 +11,9 @@
     name:
       - firewalld
       - glibc-langpack-en
-      - hostname
       - insights-client
+      - rhc
+      - rhc-worker-playbook
       - satellite-capsule
       - sos
     state: present
@@ -80,6 +81,7 @@
     --foreman-proxy-oauth-consumer-secret '{{ oauth_consumer_secret }}'
     --certs-tar-file /root/{{ inventory_hostname }}-certs.tar
     {{ satellite_capsule_installer_custom_parameters }}
+  register: capsule_install
   when: capsule_info.status != 200
 
 - name: Verify Satellite Capsule status
@@ -87,4 +89,11 @@
     url: https://{{ inventory_hostname }}:9090/features
     method: GET
     validate_certs: true
-  when: capsule_info.status != 200
+  register: capsule_info
+
+- name: Connect Satellite Capsule to Red Hat Insights
+  command: satellite-installer --register-with-insights
+  when:
+    - satellite_capsule_register_insights | bool
+    - capsule_install is changed
+    - capsule_info.status == 200
