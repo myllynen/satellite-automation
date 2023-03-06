@@ -19,11 +19,16 @@ satellite_validate_certs: true
 
 satellite_firewall_zone: public
 
+satellite_register_insights: false
+
 satellite_installer_custom_parameters: >
   --no-colors
   --disable-system-checks
   --enable-foreman-plugin-rh-cloud
+  --enable-foreman-plugin-remote-execution
   --no-enable-foreman-plugin-discovery
+  --no-enable-foreman-proxy-plugin-discovery
+  --foreman-plugin-tasks-automatic-cleanup true
 </pre>
 
 ## License

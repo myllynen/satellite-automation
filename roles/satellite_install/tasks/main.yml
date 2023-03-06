@@ -11,8 +11,9 @@
     name:
       - firewalld
       - glibc-langpack-en
-      - hostname
       - insights-client
+      - rhc
+      - rhc-worker-playbook
       - satellite
       - sos
     state: present
@@ -56,7 +57,7 @@
     --foreman-initial-organization "{{ satellite_organization }}"
     --foreman-initial-location "{{ satellite_location }}"
     {{ satellite_installer_custom_parameters }}
-  register: satellite_installer
+  register: satellite_install
   when: >
     ('msg' in satellite_info and "Connection refused" in satellite_info.msg) or
     ('result' in satellite_info.status and satellite_info.status.result != "ok")
@@ -67,3 +68,11 @@
     username: "{{ satellite_username }}"
     password: "{{ satellite_password }}"
     validate_certs: "{{ satellite_validate_certs }}"
+  register: satellite_info
+
+- name: Connect Satellite to Red Hat Insights
+  command: satellite-installer --register-with-insights
+  when:
+    - satellite_register_insights | bool
+    - satellite_install is changed
+    - ('result' in satellite_info.status and satellite_info.status.result == 'ok')
