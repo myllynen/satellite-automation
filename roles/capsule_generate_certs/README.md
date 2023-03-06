@@ -4,6 +4,9 @@
 
 Please see the collection main page for a higher level description.
 
+Creates `/root/{{ inventory_hostname }}-certs.tar` Capsule certificate
+archives for each Capsule on Satellite if not present already.
+
 ## Configuration
 
 This role does not need configuration.
