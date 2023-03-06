@@ -10,7 +10,7 @@ automation.
 * [inventory](inventory)
   * Example inventory
 * [vars_satellite.yml](vars_satellite.yml)
-  * Vars file for installing and configuring Satellite
+  * Vars file for installing and configuring Satellite and Capsules
 * [vault_satellite.yml](vault_satellite.yml)
   * Unencrypted example vault file
 * [playbooks/satellite_install.yml](playbooks/satellite_install.yml)
@@ -25,10 +25,10 @@ automation.
   * Playbook to install Satellite Capsules
 
 Depending on the environment and requirements separate playbooks and/or
-vars files, group vars, variables defined in an inventory, or some
-other approach might be appropriate for providing Satellite
-configuration. These examples aim to provide a basic starting point for
-typical installations.
+vars files, group vars, variables defined in an inventory, or some other
+approach might be appropriate for providing Satellite configuration.
+These examples aim to provide a known-good starting point for typical
+installations.
 
 These playbooks have been tested most recently using Ansible 2.12 to
 install Satellite 6.12 on RHEL 8.7.
@@ -52,6 +52,16 @@ Use
 and
 [rhel-ansible-roles](https://github.com/myllynen/rhel-ansible-roles)
 to apply such basic configurations as needed.
+
+To use a custom certificate with Satellite please refer to the Satellite
+installation guide for the needed installer parameters. By default a
+self-signed certificate will be used.
+
+The `capsule_install.yml` playbook uses the `capsule_generate_certs`
+role to create Capsule certificate archives at Satellite for each
+Capsule at `/root/{{ inventory_hostname }}-certs.tar`. Create these
+archives with custom certificates manually before running the playbook
+if needed.
 
 To install Red Hat Satellite, upload and refresh manifest, configure
 Satellite, and install Satellite Capsules:
@@ -80,6 +90,9 @@ ansible-playbook -i inventory -e @vars_satellite.yml -e @vault_satellite.yml \
 
 See also
 [https://access.redhat.com/documentation/en-us/red_hat_satellite](https://access.redhat.com/documentation/en-us/red_hat_satellite).
+
+See also
+[https://www.redhat.com/en/blog/21-things-every-red-hat-satellite-user-should-know](https://www.redhat.com/en/blog/21-things-every-red-hat-satellite-user-should-know).
 
 See also
 [https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/satellite).
