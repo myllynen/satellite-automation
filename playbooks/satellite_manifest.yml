@@ -3,11 +3,5 @@
   hosts: "{{ satellite | default('satellite') }}"
   become: true
   gather_facts: true
-  vars:
-    satellite_manifest_download: false
-    # Manifest file to copy to target
-    satellite_manifest_file: /root/satellite_manifest.zip
-    #satellite_manifest_uuid:
-    satellite_manifest_refresh: true
   roles:
     - myllynen.satellite_automation.satellite_manifest
