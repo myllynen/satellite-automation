@@ -10,18 +10,37 @@ satellite_validate_certs: true
 
 satellite_firewall_zone: public
 
+satellite_register_insights: false
+
 satellite_installer_custom_parameters: >
   --no-colors
   --disable-system-checks
   --enable-foreman-plugin-rh-cloud
+  --enable-foreman-plugin-remote-execution
   --no-enable-foreman-plugin-discovery
+  --no-enable-foreman-proxy-plugin-discovery
+  --foreman-plugin-tasks-automatic-cleanup true
 
 
 #
 # Satellite manifest configuration
 #
 satellite_manifest_download: false
-satellite_manifest_file: /root/satellite_manifest.zip
+satellite_manifest_file: satellite_manifest.zip
+
+
+#
+# Satellite Capsule install configuration
+#
+satellite_capsule_firewall_zone: public
+
+satellite_capsule_register_insights: false
+
+satellite_capsule_installer_custom_parameters: >
+  --no-colors
+  --disable-system-checks
+  --enable-foreman-proxy-plugin-openscap
+  --no-enable-foreman-proxy-plugin-discovery
 
 
 #
