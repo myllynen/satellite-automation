@@ -35,12 +35,12 @@ install Satellite 6.12 on RHEL 8.7.
 
 ## Quick Usage Example
 
-In a typical use case these playbooks and roles would be used to
-install Satellite and Capsules according to the provided configuration.
-After that the example `satellite_configure.yml` playbook together with
-the `vars_satellite.yml` file could be used as a starting point for
-defining a real site- or organization-specific setup based on local
-needs and requirements.
+In a typical use case these playbooks and roles would be used to install
+Satellite and Capsules according to the provided configuration. After
+that the example `satellite_configure.yml` playbook together with the
+`vars_satellite.yml` file could be used as a starting point for defining
+a real site- or organization-specific setup based on local needs and
+requirements.
 
 To install this collection from GitHub:
 
@@ -69,6 +69,9 @@ role to create Capsule certificate archives at Satellite for each
 Capsule at `/root/{{ inventory_hostname }}-certs.tar`. Create these
 archives with custom certificates manually before running the playbook
 if needed.
+
+Use `satellite-installer --scenario satellite --full-help` to see all
+the available intaller parameters.
 
 To install Red Hat Satellite, upload and refresh manifest, install
 Capsules, and do initial Satellite configuration:
