@@ -60,15 +60,15 @@
 
 - name: Copy Satellite Capsule certificates to Satellite Capsule server
   copy:
-    content: "{{ capsule_certs.content|b64decode }}"
+    content: "{{ capsule_certs.content | b64decode }}"
     dest: /root/{{ inventory_hostname }}-certs.tar
     mode: '0600'
   when: capsule_info.status != 200
 
 - name: Install Satellite Capsule
   vars:
-    oauth_consumer_key: "{{ (foreman_settings.content|b64decode | regex_search('.*oauth_consumer_key.*')).split()[1] }}"
-    oauth_consumer_secret: "{{ (foreman_settings.content|b64decode | regex_search('.*oauth_consumer_secret.*')).split()[1] }}"
+    oauth_consumer_key: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_key.*')).split()[1] }}"
+    oauth_consumer_secret: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_secret.*')).split()[1] }}"
   environment:
     LC_ALL: en_US.UTF-8
   command: >
@@ -82,6 +82,7 @@
     --certs-tar-file /root/{{ inventory_hostname }}-certs.tar
     {{ satellite_capsule_installer_custom_parameters }}
   register: capsule_install
+  changed_when: true
   when: capsule_info.status != 200
 
 - name: Verify Satellite Capsule status
@@ -93,6 +94,7 @@
 
 - name: Connect Satellite Capsule to Red Hat Insights
   command: satellite-installer --register-with-insights
+  changed_when: true
   when:
     - satellite_capsule_register_insights | bool
     - capsule_install is changed

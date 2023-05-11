@@ -58,6 +58,7 @@
     --foreman-initial-location "{{ satellite_location }}"
     {{ satellite_installer_custom_parameters }}
   register: satellite_install
+  changed_when: true
   when: >
     ('msg' in satellite_info and "Connection refused" in satellite_info.msg) or
     ('result' in satellite_info.status and satellite_info.status.result != "ok")
@@ -72,6 +73,7 @@
 
 - name: Connect Satellite to Red Hat Insights
   command: satellite-installer --register-with-insights
+  changed_when: true
   when:
     - satellite_register_insights | bool
     - satellite_install is changed
