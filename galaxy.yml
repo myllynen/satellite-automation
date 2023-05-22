@@ -11,10 +11,13 @@ license:
   - GPL-3.0-or-later
 tags:
   - rhel
+  - linux
+  - tools
   - satellite
   - capsule
   - automation
   - configuration
+  - infrastructure
 dependencies:
   ansible.posix: ">=1.4.0"
   redhat.satellite: ">=3.6.0"

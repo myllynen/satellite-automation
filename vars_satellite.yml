@@ -14,7 +14,8 @@ satellite_register_insights: false
 
 satellite_installer_custom_parameters: >
   --no-colors
-  --disable-system-checks
+  --tuning development
+  --skip-checks-i-know-better
   --enable-foreman-plugin-rh-cloud
   --enable-foreman-plugin-remote-execution
   --enable-foreman-plugin-openscap
@@ -22,6 +23,8 @@ satellite_installer_custom_parameters: >
   --enable-foreman-proxy-plugin-openscap
   --no-enable-foreman-plugin-discovery
   --no-enable-foreman-proxy-plugin-discovery
+  --foreman-proxy-content-enable-ansible true
+  --foreman-proxy-content-enable-docker false
   --foreman-plugin-tasks-automatic-cleanup true
 
 
@@ -41,9 +44,11 @@ satellite_capsule_register_insights: false
 
 satellite_capsule_installer_custom_parameters: >
   --no-colors
-  --disable-system-checks
+  --skip-checks-i-know-better
   --enable-foreman-proxy-plugin-openscap
   --no-enable-foreman-proxy-plugin-discovery
+  --foreman-proxy-content-enable-ansible true
+  --foreman-proxy-content-enable-docker false
 
 
 #
@@ -62,9 +67,9 @@ satellite_products:
         releasever: 8
 
       - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
-        releasever: 8.7
+        releasever: 8.8
       - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
-        releasever: 8.7
+        releasever: 8.8
 
       - name: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
       - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
@@ -72,7 +77,7 @@ satellite_products:
   # Satellite Capsule repositories
   - name: Red Hat Satellite Capsule
     repository_sets:
-      - name: Red Hat Satellite Capsule 6.12 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Capsule 6.13 for RHEL 8 x86_64 (RPMs)
 
 
 #

@@ -5,6 +5,8 @@ satellite_capsule_register_insights: false
 
 satellite_capsule_installer_custom_parameters: >
   --no-colors
-  --disable-system-checks
+  --skip-checks-i-know-better
   --enable-foreman-proxy-plugin-openscap
   --no-enable-foreman-proxy-plugin-discovery
+  --foreman-proxy-content-enable-ansible true
+  --foreman-proxy-content-enable-docker false

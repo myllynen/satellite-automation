@@ -23,7 +23,8 @@ satellite_register_insights: false
 
 satellite_installer_custom_parameters: >
   --no-colors
-  --disable-system-checks
+  --tuning development
+  --skip-checks-i-know-better
   --enable-foreman-plugin-rh-cloud
   --enable-foreman-plugin-remote-execution
   --enable-foreman-plugin-openscap
@@ -31,6 +32,8 @@ satellite_installer_custom_parameters: >
   --enable-foreman-proxy-plugin-openscap
   --no-enable-foreman-plugin-discovery
   --no-enable-foreman-proxy-plugin-discovery
+  --foreman-proxy-content-enable-ansible true
+  --foreman-proxy-content-enable-docker false
   --foreman-plugin-tasks-automatic-cleanup true
 </pre>
 

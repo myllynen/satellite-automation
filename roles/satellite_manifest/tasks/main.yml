@@ -13,7 +13,7 @@
   register: manifest_file
   when: satellite_manifest_download | bool
 
-- name: Get manifest from Red Hat Customer Portal
+- name: Download manifest from Red Hat Customer Portal
   redhat.satellite.redhat_manifest:
     uuid: "{{ satellite_manifest_uuid }}"
     username: "{{ satellite_rhsm_username }}"
