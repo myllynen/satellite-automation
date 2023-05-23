@@ -19,6 +19,7 @@
     username: "{{ satellite_rhsm_username }}"
     password: "{{ satellite_rhsm_password }}"
     path: "{{ satellite_manifest_path }}"
+    state: present
   register: manifest_download
   when:
     - satellite_manifest_download | bool
@@ -29,8 +30,6 @@
     path: "{{ satellite_manifest_path }}"
     mode: '0600'
 
-# Update to use "manifest_download is changed" in when once working
-# https://github.com/theforeman/foreman-ansible-modules/issues/1473
 - name: Upload manifest to Satellite
   redhat.satellite.subscription_manifest:
     server_url: "{{ satellite_server_url }}"
