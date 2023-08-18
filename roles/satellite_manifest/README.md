@@ -17,13 +17,13 @@ satellite_manifest_download: false
 # Refresh manifest in Satellite
 satellite_manifest_refresh: false
 
-# Manifest path on the target host
+# Manifest path to use on the target host
 satellite_manifest_path: /root/satellite_manifest.zip
 
 #
 # Required when copying manifest
 #
-# Manifest file to copy to target
+# Local manifest file to copy to target
 satellite_manifest_file: satellite_manifest.zip
 
 #
@@ -31,6 +31,9 @@ satellite_manifest_file: satellite_manifest.zip
 #
 # Manifest download UUID
 satellite_manifest_uuid:
+# These should come from vault
+#satellite_rhsm_username:
+#satellite_rhsm_password:
 </pre>
 
 ## License
