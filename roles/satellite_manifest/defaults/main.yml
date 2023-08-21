@@ -18,8 +18,10 @@ satellite_manifest_file: satellite_manifest.zip
 #
 # Required when downloading manifest
 #
-# Manifest download UUID
+# Manifest UUID to download
 satellite_manifest_uuid:
+
+# Red Hat Customer Portal credentials for downloading
 # These should come from vault
 #satellite_rhsm_username:
 #satellite_rhsm_password:
