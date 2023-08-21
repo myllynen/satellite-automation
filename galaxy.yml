@@ -1,7 +1,7 @@
 ---
 namespace: myllynen
 name: satellite_automation
-version: "1.0.2"
+version: "1.0.5"
 readme: README.md
 authors:
   - Marko Myllynen <myllynen@redhat.com>
