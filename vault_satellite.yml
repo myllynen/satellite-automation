@@ -1,6 +1,6 @@
 # Satellite credentials
 satellite_username: admin
-satellite_password: foobar123
+satellite_password: Foobar_12
 
 # Red Hat Customer Portal credentials
 # Needed when downloading manifest
