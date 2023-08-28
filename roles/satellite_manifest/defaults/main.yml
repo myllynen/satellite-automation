@@ -1,19 +1,21 @@
 ---
-# Either copy a manifest file from the local system
-# or download directly from Red Hat Customer Portal
+# Either use a manifest file from the local system
+# or download one from Red Hat Customer Portal
+# Downloading will be done from the Satellite host
 satellite_manifest_download: false
 
 # Refresh manifest in Satellite
 satellite_manifest_refresh: false
 
-# Manifest path to use on the target host
-satellite_manifest_path: /root/satellite_manifest.zip
+# Manifest file path to use on the Satellite host
+# This is used both when copying or downloading
+satellite_manifest_file_remote: /root/satellite_manifest.zip
 
 #
 # Required when copying manifest
 #
-# Local manifest file to copy to target
-satellite_manifest_file: satellite_manifest.zip
+# Manifest local file path to copy to the Satellite host
+satellite_manifest_file_local: satellite_manifest.zip
 
 #
 # Required when downloading manifest
