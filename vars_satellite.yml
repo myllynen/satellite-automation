@@ -32,7 +32,7 @@ satellite_installer_custom_parameters: >
 # Satellite manifest configuration
 #
 satellite_manifest_download: false
-satellite_manifest_file: satellite_manifest.zip
+satellite_manifest_file_local: satellite_manifest.zip
 
 
 #
