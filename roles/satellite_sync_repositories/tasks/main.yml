@@ -10,6 +10,7 @@
   register: enabled_products
 
 - name: Sync enabled repositories
+  no_log: true
   redhat.satellite.repository_sync:
     server_url: "{{ satellite_server_url }}"
     username: "{{ satellite_username }}"
@@ -17,6 +18,5 @@
     organization: "{{ satellite_organization }}"
     product: "{{ item.name }}"
     validate_certs: "{{ satellite_validate_certs }}"
-  no_log: true
   loop: "{{ enabled_products.resources }}"
   when: item.repository_count > 0
