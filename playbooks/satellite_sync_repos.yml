@@ -1,6 +1,6 @@
 ---
 - name: Sync Satellite repositories
-  hosts: "{{ satellite | default('satellite') }}"
+  hosts: "{{ satellite | default('all') }}"
   become: true
   gather_facts: true
   roles:
