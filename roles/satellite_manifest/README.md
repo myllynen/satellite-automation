@@ -20,13 +20,13 @@ satellite_manifest_refresh: false
 
 # Manifest file path to use on the Satellite host
 # This is used both when copying or downloading
-satellite_manifest_file_remote: /root/satellite_manifest.zip
+satellite_manifest_file_remote: "{{ ansible_facts.env.HOME + '/satellite_manifest.zip' }}"
 
 #
 # Required when copying manifest
 #
 # Manifest local file path to copy to the Satellite host
-satellite_manifest_file_local: satellite_manifest.zip
+satellite_manifest_file_local: "{{ lookup('env', 'HOME') + '/satellite_manifest.zip' }}"
 
 #
 # Required when downloading manifest
