@@ -4,7 +4,6 @@
     src: "{{ satellite_manifest_file_local }}"
     dest: "{{ satellite_manifest_file_remote }}"
     mode: '0600'
-  register: manifest_copy
   when: not satellite_manifest_download | bool
 
 - name: Check manifest file on Satellite server
@@ -20,7 +19,6 @@
     password: "{{ satellite_rhsm_password }}"
     path: "{{ satellite_manifest_file_remote }}"
     state: present
-  register: manifest_download
   when:
     - satellite_manifest_download | bool
     - not manifest_file.stat.exists
@@ -39,8 +37,6 @@
     manifest_path: "{{ satellite_manifest_file_remote }}"
     validate_certs: "{{ satellite_validate_certs }}"
     state: present
-  when: manifest_copy is changed or
-        (satellite_manifest_download | bool and not manifest_file.stat.exists)
 
 - name: Refresh Satellite manifest
   redhat.satellite.subscription_manifest:
