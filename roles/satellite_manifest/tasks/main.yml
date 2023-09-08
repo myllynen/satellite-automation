@@ -37,6 +37,7 @@
     manifest_path: "{{ satellite_manifest_file_remote }}"
     validate_certs: "{{ satellite_validate_certs }}"
     state: present
+  when: not satellite_manifest_refresh | bool
 
 - name: Refresh Satellite manifest
   redhat.satellite.subscription_manifest:

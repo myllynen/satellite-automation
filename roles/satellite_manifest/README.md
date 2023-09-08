@@ -15,7 +15,8 @@ Below are the role default values from defaults/main.yml:
 # Downloading will be done from the Satellite host
 satellite_manifest_download: false
 
-# Refresh manifest in Satellite
+# Skip manifest file upload, only refresh
+# previously uploaded manifest in Satellite
 satellite_manifest_refresh: false
 
 # Manifest file path to use on the Satellite host
