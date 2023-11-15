@@ -67,9 +67,9 @@ satellite_products:
         releasever: 8
 
       - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
-        releasever: 8.8
+        releasever: 8.9
       - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
-        releasever: 8.8
+        releasever: 8.9
 
       - name: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
       - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
@@ -77,7 +77,7 @@ satellite_products:
   # Satellite Capsule repositories
   - name: Red Hat Satellite Capsule
     repository_sets:
-      - name: Red Hat Satellite Capsule 6.13 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Capsule 6.14 for RHEL 8 x86_64 (RPMs)
 
 
 #
