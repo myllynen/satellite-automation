@@ -1,6 +1,6 @@
 ---
 - name: Install Red Hat Satellite
-  hosts: "{{ satellite | default('all') }}"
+  hosts: satellite
   become: true
   gather_facts: true
   roles:

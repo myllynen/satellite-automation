@@ -1,6 +1,6 @@
 ---
 - name: Install Red Hat Satellite Capsule
-  hosts: "{{ capsules | default('all') }}"
+  hosts: capsules
   become: true
   gather_facts: true
   roles:
