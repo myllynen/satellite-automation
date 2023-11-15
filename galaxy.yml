@@ -19,7 +19,7 @@ tags:
   - configuration
   - infrastructure
 dependencies:
-  ansible.posix: ">=1.4.0"
-  redhat.satellite: ">=3.6.0"
+  ansible.posix: ">=1.5.0"
+  redhat.satellite: ">=3.14.0"
 repository: https://www.github.com/myllynen/satellite-automation
 issues: https://www.github.com/myllynen/satellite-automation/issues
