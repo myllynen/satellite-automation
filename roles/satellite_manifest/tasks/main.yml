@@ -14,11 +14,11 @@
 
 - name: Download manifest from Red Hat Customer Portal
   redhat.satellite.redhat_manifest:
+    state: present
     uuid: "{{ satellite_manifest_uuid }}"
     username: "{{ satellite_rhsm_username }}"
     password: "{{ satellite_rhsm_password }}"
     path: "{{ satellite_manifest_file_remote }}"
-    state: present
   changed_when: true
   when:
     - satellite_manifest_download | bool
@@ -31,21 +31,21 @@
 
 - name: Upload manifest to Satellite
   redhat.satellite.subscription_manifest:
+    state: present
     server_url: "{{ satellite_server_url }}"
     username: "{{ satellite_username }}"
     password: "{{ satellite_password }}"
+    validate_certs: "{{ satellite_validate_certs }}"
     organization: "{{ satellite_organization }}"
     manifest_path: "{{ satellite_manifest_file_remote }}"
-    validate_certs: "{{ satellite_validate_certs }}"
-    state: present
   when: not satellite_manifest_refresh | bool
 
 - name: Refresh Satellite manifest
   redhat.satellite.subscription_manifest:
+    state: refreshed
     server_url: "{{ satellite_server_url }}"
     username: "{{ satellite_username }}"
     password: "{{ satellite_password }}"
-    organization: "{{ satellite_organization }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    state: refreshed
+    organization: "{{ satellite_organization }}"
   when: satellite_manifest_refresh | bool

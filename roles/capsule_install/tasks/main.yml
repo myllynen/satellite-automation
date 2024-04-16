@@ -8,6 +8,7 @@
 
 - name: Install Satellite Capsule packages
   yum:
+    state: present
     name:
       - firewalld
       - glibc-langpack-en
@@ -16,31 +17,30 @@
       - rhc-worker-playbook
       - satellite-capsule
       - sos
-    state: present
 
 - name: Enable firewalld service
   service:
-    name: firewalld
     enabled: true
+    name: firewalld
 
 - name: Start firewalld service
   service:
-    name: firewalld
     state: started
+    name: firewalld
 
 - name: Configure Satellite Capsule firewall
   ansible.posix.firewalld:
-    zone: "{{ satellite_capsule_firewall_zone }}"
+    state: enabled
     service: RH-Satellite-6-capsule
+    zone: "{{ satellite_capsule_firewall_zone }}"
     permanent: true
     immediate: true
-    state: enabled
 
 - name: Check Satellite Capsule status
   uri:
     url: https://{{ inventory_hostname }}:9090/features
-    method: GET
     validate_certs: false
+    method: GET
   register: capsule_info
   failed_when: false
 
@@ -88,8 +88,8 @@
 - name: Verify Satellite Capsule status
   uri:
     url: https://{{ inventory_hostname }}:9090/features
-    method: GET
     validate_certs: true
+    method: GET
   register: capsule_info
 
 - name: Connect Satellite Capsule to Red Hat Insights
