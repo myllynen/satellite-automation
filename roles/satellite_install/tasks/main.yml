@@ -15,7 +15,7 @@
   changed_when: "'Nothing to do' not in dnf_command.stdout"
 
 - name: Install Satellite packages
-  yum:
+  dnf:
     state: present
     name:
       - firewalld
