@@ -16,7 +16,6 @@
 
 - name: Install Satellite packages
   dnf:
-    state: present
     name:
       - firewalld
       - glibc-langpack-en
@@ -25,24 +24,25 @@
       - rhc-worker-playbook
       - satellite
       - sos
+    state: present
 
 - name: Enable firewalld service
   service:
-    enabled: true
     name: firewalld
+    enabled: true
 
 - name: Start firewalld service
   service:
-    state: started
     name: firewalld
+    state: started
 
 - name: Configure Satellite firewall
   ansible.posix.firewalld:
-    state: enabled
     service: RH-Satellite-6
     zone: "{{ satellite_firewall_zone }}"
-    permanent: true
+    state: enabled
     immediate: true
+    permanent: true
 
 - name: Check Satellite status
   redhat.satellite.status_info:

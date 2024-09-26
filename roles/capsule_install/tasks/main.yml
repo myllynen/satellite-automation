@@ -8,7 +8,6 @@
 
 - name: Install Satellite Capsule packages
   dnf:
-    state: present
     name:
       - firewalld
       - glibc-langpack-en
@@ -17,24 +16,25 @@
       - rhc-worker-playbook
       - satellite-capsule
       - sos
+    state: present
 
 - name: Enable firewalld service
   service:
-    enabled: true
     name: firewalld
+    enabled: true
 
 - name: Start firewalld service
   service:
-    state: started
     name: firewalld
+    state: started
 
 - name: Configure Satellite Capsule firewall
   ansible.posix.firewalld:
-    state: enabled
     service: RH-Satellite-6-capsule
     zone: "{{ satellite_capsule_firewall_zone }}"
-    permanent: true
+    state: enabled
     immediate: true
+    permanent: true
 
 - name: Check Satellite Capsule status
   uri:
