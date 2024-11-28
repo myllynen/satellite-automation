@@ -23,7 +23,7 @@ satellite_settings:
   - name: template_sync_force
     value: true
   - name: template_sync_lock
-    value: "true"
+    value: "lock"
 
   - name: errata_status_installable
     value: true
@@ -79,7 +79,7 @@ satellite_products:
 satellite_sync_plans:
   - name: Weekly Red Hat repository sync
     interval: weekly
-    sync_date: 2022-01-01 02:02:00 UTC
+    sync_date: 2022-01-01 02:02:00 +0000
     enabled: true
     products:
       - Red Hat Satellite Capsule
