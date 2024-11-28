@@ -1,7 +1,0 @@
----
-- name: Sync Satellite repositories
-  hosts: satellite
-  become: true
-  gather_facts: true
-  roles:
-    - myllynen.satellite_automation.satellite_sync_repositories

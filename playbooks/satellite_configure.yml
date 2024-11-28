@@ -1,9 +1,0 @@
----
-- name: Configure Red Hat Satellite
-  hosts: satellite
-  become: true
-  gather_facts: true
-  roles:
-    - redhat.satellite.repositories
-    - redhat.satellite.sync_plans
-    - redhat.satellite.lifecycle_environments

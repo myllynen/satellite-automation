@@ -1,7 +1,0 @@
----
-- name: Upload Satellite manifest
-  hosts: satellite
-  become: true
-  gather_facts: true
-  roles:
-    - myllynen.satellite_automation.satellite_manifest
