@@ -16,10 +16,8 @@
       dnf:
         name:
           - firewalld
-          - glibc-langpack-en
           - insights-client
           - rhc
-          - rhc-worker-playbook
           - satellite-installer
           - sos
         state: present
