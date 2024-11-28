@@ -1,0 +1,27 @@
+---
+- name: Sync Satellite repositories
+  hosts: satellite
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Get product information
+      redhat.satellite.resource_info:
+        server_url: "{{ satellite_server_url }}"
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        organization: "{{ satellite_organization }}"
+        resource: products
+      register: enabled_products
+
+    - name: Sync enabled repositories
+      no_log: true
+      redhat.satellite.repository_sync:
+        server_url: "{{ satellite_server_url }}"
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        organization: "{{ satellite_organization }}"
+        product: "{{ item.name }}"
+      loop: "{{ enabled_products.resources }}"
+      when: item.repository_count > 0

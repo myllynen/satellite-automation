@@ -1,0 +1,27 @@
+#
+# Satellite Capsule install configuration
+#
+satellite_installer_scenario: capsule
+satellite_installer_locale: C.UTF-8
+satellite_installer_no_colors: true
+satellite_installer_verbose: true
+satellite_installer_timeout: 1800
+
+satellite_capsule_firewall_zone: public
+
+satellite_capsule_register_insights: false
+
+# capsule_install.yml will set the oauth variables
+satellite_installer_options:
+  - --skip-checks-i-know-better
+  - --certs-tar-file /root/{{ inventory_hostname }}-certs.tar
+  - --enable-foreman-proxy-plugin-openscap
+  - --no-enable-foreman-proxy-plugin-discovery
+  - --foreman-proxy-content-enable-ansible true
+  - --foreman-proxy-content-enable-docker false
+  - --foreman-proxy-register-in-foreman true
+  - --foreman-proxy-foreman-base-url https://{{ groups.satellite[0] }}
+  - --foreman-proxy-oauth-consumer-key '{{ oauth_consumer_key }}'
+  - --foreman-proxy-oauth-consumer-secret '{{ oauth_consumer_secret }}'
+  - --foreman-proxy-trusted-hosts {{ groups.satellite[0] }}
+  - --foreman-proxy-trusted-hosts {{ inventory_hostname }}

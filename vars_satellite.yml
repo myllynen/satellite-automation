@@ -1,107 +1,37 @@
 #
 # Satellite install configuration
 #
+satellite_installer_scenario: satellite
+satellite_installer_locale: C.UTF-8
+satellite_installer_no_colors: true
+satellite_installer_verbose: true
+satellite_installer_timeout: 1800
+
 satellite_server_url: https://satellite.example.com
 
 satellite_organization: Acme Enterprises
 satellite_location: Test Lab
 
-satellite_validate_certs: true
+satellite_validate_certs: false
 
 satellite_firewall_zone: public
 
 satellite_register_insights: false
 
-satellite_installer_custom_parameters: >
-  --no-colors
-  --tuning development
-  --skip-checks-i-know-better
-  --enable-foreman-plugin-rh-cloud
-  --enable-foreman-plugin-remote-execution
-  --enable-foreman-plugin-openscap
-  --enable-foreman-plugin-webhooks
-  --enable-foreman-proxy-plugin-openscap
-  --no-enable-foreman-plugin-discovery
-  --no-enable-foreman-proxy-plugin-discovery
-  --foreman-proxy-content-enable-ansible true
-  --foreman-proxy-content-enable-docker false
-  --foreman-plugin-tasks-automatic-cleanup true
-
-
-#
-# Satellite manifest configuration
-#
-satellite_manifest_download: false
-satellite_manifest_file_local: satellite_manifest.zip
-
-
-#
-# Satellite Capsule install configuration
-#
-satellite_capsule_firewall_zone: public
-
-satellite_capsule_register_insights: false
-
-satellite_capsule_installer_custom_parameters: >
-  --no-colors
-  --skip-checks-i-know-better
-  --enable-foreman-proxy-plugin-openscap
-  --no-enable-foreman-proxy-plugin-discovery
-  --foreman-proxy-content-enable-ansible true
-  --foreman-proxy-content-enable-docker false
-
-
-#
-# Satellite Products
-#
-satellite_products:
-  #
-  # Red Hat repositories
-  #
-  # RHEL repositories
-  - name: Red Hat Enterprise Linux for x86_64
-    repository_sets:
-      - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
-        releasever: 8
-      - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
-        releasever: 8
-
-      - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)
-        releasever: 8.9
-      - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)
-        releasever: 8.9
-
-      - name: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
-      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
-
-  # Satellite Capsule repositories
-  - name: Red Hat Satellite Capsule
-    repository_sets:
-      - name: Red Hat Satellite Capsule 6.14 for RHEL 8 x86_64 (RPMs)
-
-
-#
-# Satellite Sync Plans
-#
-satellite_sync_plans:
-  - name: Weekly Red Hat repository sync
-    interval: weekly
-    sync_date: 2022-01-01 02:02:00 UTC
-    enabled: true
-    products:
-      - Red Hat Satellite Capsule
-      - Red Hat Enterprise Linux for x86_64
-
-
-#
-# Satellite Lifecycle Environments
-#
-satellite_lifecycle_environments:
-  - name: Development
-    prior: Library
-
-  - name: Testing
-    prior: Development
-
-  - name: Production
-    prior: Testing
+satellite_installer_options:
+  - --foreman-initial-admin-username "{{ satellite_username }}"
+  - --foreman-initial-admin-password '{{ satellite_password }}'
+  - --foreman-initial-organization "{{ satellite_organization }}"
+  - --foreman-initial-location "{{ satellite_location }}"
+  - --tuning development
+  - --skip-checks-i-know-better
+  - --enable-foreman-plugin-rh-cloud
+  - --enable-foreman-plugin-remote-execution
+  - --enable-foreman-plugin-openscap
+  - --enable-foreman-plugin-webhooks
+  - --enable-foreman-proxy-plugin-openscap
+  - --no-enable-foreman-plugin-discovery
+  - --no-enable-foreman-proxy-plugin-discovery
+  - --foreman-proxy-content-enable-ansible true
+  - --foreman-proxy-content-enable-docker false
+  - --foreman-plugin-tasks-automatic-cleanup true

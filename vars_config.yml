@@ -1,0 +1,86 @@
+#
+# Satellite Settings
+#
+satellite_settings:
+  - name: login_text
+    value: Welcome to Satellite!
+  - name: entries_per_page
+    value: 100
+
+  - name: default_download_policy
+    value: immediate
+  - name: default_proxy_download_policy
+    value: immediate
+  - name: default_redhat_download_policy
+    value: immediate
+
+  - name: template_sync_associate
+    value: never
+  - name: template_sync_branch
+    value: master
+  - name: template_sync_repo
+    value: "{{ satellite_templates_repo_url | default('') }}"
+  - name: template_sync_force
+    value: true
+  - name: template_sync_lock
+    value: "true"
+
+  - name: errata_status_installable
+    value: true
+  - name: unregister_delete_host
+    value: true
+
+
+#
+# Satellite Lifecycle Environments
+#
+satellite_lifecycle_environments:
+  - name: Development
+    prior: Library
+
+  - name: Testing
+    prior: Development
+
+  - name: Production
+    prior: Testing
+
+
+#
+# Satellite Products
+#
+satellite_products:
+  #
+  # Red Hat repositories
+  #
+  # RHEL repositories
+  - name: Red Hat Enterprise Linux for x86_64
+    repository_sets:
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+        releasever: 9
+      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+        releasever: 9
+
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)
+        releasever: 9.5
+      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)
+        releasever: 9.5
+
+      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
+
+  # Satellite Capsule repositories
+  - name: Red Hat Satellite Capsule
+    repository_sets:
+      - name: Red Hat Satellite Capsule 6.16 for RHEL 9 x86_64 (RPMs)
+
+
+#
+# Satellite Sync Plans
+#
+satellite_sync_plans:
+  - name: Weekly Red Hat repository sync
+    interval: weekly
+    sync_date: 2022-01-01 02:02:00 UTC
+    enabled: true
+    products:
+      - Red Hat Satellite Capsule
+      - Red Hat Enterprise Linux for x86_64

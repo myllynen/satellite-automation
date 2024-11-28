@@ -1,0 +1,99 @@
+---
+- name: Install Red Hat Satellite Capsule
+  hosts: capsules
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Generate Satellite Capsule certificates
+      # https://bugzilla.redhat.com/show_bug.cgi?id=2124283
+      throttle: 1
+      command:
+        cmd: >
+          capsule-certs-generate
+          --foreman-proxy-fqdn {{ inventory_hostname }}
+          --certs-tar /root/{{ inventory_hostname }}-certs.tar
+        creates: /root/{{ inventory_hostname }}-certs.tar
+      delegate_to: "{{ groups.satellite[0] }}"
+
+    - name: Install helpful packages
+      dnf:
+        name:
+          - firewalld
+          - glibc-langpack-en
+          - insights-client
+          - rhc
+          - rhc-worker-playbook
+          - satellite-installer
+          - sos
+        state: present
+
+    - name: Enable firewalld service
+      service:
+        name: firewalld
+        enabled: true
+
+    - name: Start firewalld service
+      service:
+        name: firewalld
+        state: started
+
+    - name: Configure Satellite Capsule firewall
+      ansible.posix.firewalld:
+        service: RH-Satellite-6-capsule
+        zone: "{{ satellite_capsule_firewall_zone }}"
+        state: enabled
+        immediate: true
+        permanent: true
+
+    - name: Check Satellite Capsule status
+      uri:
+        url: https://{{ inventory_hostname }}:9090/features
+        validate_certs: false
+        method: GET
+      register: capsule_info
+      failed_when: false
+
+    - name: Fetch Foreman settings from Satellite server
+      slurp:
+        src: /etc/foreman/settings.yaml
+      register: foreman_settings
+      delegate_to: "{{ groups.satellite[0] }}"
+      when: capsule_info.status != 200
+
+    - name: Fetch Satellite Capsule certificates from Satellite server
+      slurp:
+        src: /root/{{ inventory_hostname }}-certs.tar
+      register: capsule_certs
+      delegate_to: "{{ groups.satellite[0] }}"
+      when: capsule_info.status != 200
+
+    - name: Copy Satellite Capsule certificates to Satellite Capsule server
+      copy:
+        content: "{{ capsule_certs.content | b64decode }}"
+        dest: /root/{{ inventory_hostname }}-certs.tar
+        mode: '0600'
+      when: capsule_info.status != 200
+
+    - name: Install Satellite Capsule
+      vars:
+        oauth_consumer_key: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_key.*')).split()[1] }}"
+        oauth_consumer_secret: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_secret.*')).split()[1] }}"
+      include_role:
+        name: redhat.satellite_operations.installer
+      register: capsule_install
+      when: capsule_info.status != 200
+
+    - name: Verify Satellite Capsule status
+      uri:
+        url: https://{{ inventory_hostname }}:9090/features
+        validate_certs: true
+        method: GET
+      register: capsule_info
+
+    - name: Connect Satellite Capsule to Red Hat Insights
+      command: satellite-installer --register-with-insights
+      changed_when: true
+      when:
+        - satellite_capsule_register_insights | bool
+        - capsule_install is changed
+        - capsule_info.status == 200
