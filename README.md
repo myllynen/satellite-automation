@@ -20,7 +20,7 @@ Ansible playbooks for Red Hat Satellite automation.
   * Unencrypted example vault file
 * [satellite_install.yml](satellite_install.yml)
   * Playbook to install Red Hat Satellite
-* [satellite_manifest](satellite_manifest.yml)
+* [satellite_manifest.yml](satellite_manifest.yml)
   * Playbook to upload Satellite manifest
 * [capsule_install.yml](capsule_install.yml)
   * Playbook to install Satellite Capsules
