@@ -19,12 +19,12 @@
         sudo_passwordless: true
         authorized_keys:
           - ssh-ed25519 ... id_ed25519.pub
+    accounts_local_password_encrypted: false
     #accounts_local_users_groups:
     #  - name: admin
     #    groups:
     #      - sshadmin
     #    append: false
-    accounts_local_password_encrypted: false
     boot_parameters_enable:
       - quiet
     boot_parameters_disable:
