@@ -19,6 +19,11 @@
         sudo_passwordless: true
         authorized_keys:
           - ssh-ed25519 ... id_ed25519.pub
+    #accounts_local_users_groups:
+    #  - name: admin
+    #    groups:
+    #      - sshadmin
+    #    append: false
     accounts_local_password_encrypted: false
     boot_parameters_enable:
       - quiet
@@ -27,6 +32,7 @@
       - no_timer_check
       - resume
       - rhgb
+      - selinux
     boot_parameters_timeout: 1
     boot_parameters_reboot: false
     etc_hosts_self_add: true
@@ -43,6 +49,7 @@
       - nano
       - openssh-clients
       - psmisc
+      - rsync
       - sos
       - tar
       - zstd
@@ -73,7 +80,7 @@
     service_state_enable:
       - firewalld.service
     #sshd_options:
-    #  AllowGroups: aapadmin
+    #  AllowGroups: sshadmin
     system_hostname: "{{ ansible_facts.fqdn | lower }}"
     system_locale: auto
     system_update_reboot_policy: when_updated
