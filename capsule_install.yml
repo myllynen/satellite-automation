@@ -74,8 +74,9 @@
 
     - name: Install Satellite Capsule
       vars:
-        oauth_consumer_key: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_key.*')).split()[1] }}"
-        oauth_consumer_secret: "{{ (foreman_settings.content | b64decode | regex_search('.*oauth_consumer_secret.*')).split()[1] }}"
+        foreman_settings_yaml: "{{ foreman_settings.content | b64decode | from_yaml }}"
+        oauth_consumer_key: "{{ foreman_settings_yaml[':oauth_consumer_key'] }}"
+        oauth_consumer_secret: "{{ foreman_settings_yaml[':oauth_consumer_secret'] }}"
       include_role:
         name: redhat.satellite_operations.installer
       register: capsule_install
