@@ -7,7 +7,7 @@
     - name: Generate Satellite Capsule certificates
       # https://bugzilla.redhat.com/show_bug.cgi?id=2124283
       throttle: 1
-      command:
+      ansible.builtin.command:
         cmd: >
           capsule-certs-generate
           --foreman-proxy-fqdn {{ inventory_hostname }}
@@ -16,7 +16,7 @@
       delegate_to: "{{ groups.satellite[0] }}"
 
     - name: Install helpful packages
-      dnf:
+      ansible.builtin.dnf:
         name:
           - firewalld
           - insights-client
@@ -26,12 +26,12 @@
         state: present
 
     - name: Enable firewalld service
-      service:
+      ansible.builtin.service:
         name: firewalld
         enabled: true
 
     - name: Start firewalld service
-      service:
+      ansible.builtin.service:
         name: firewalld
         state: started
 
@@ -44,7 +44,7 @@
         permanent: true
 
     - name: Check Satellite Capsule status
-      uri:
+      ansible.builtin.uri:
         url: https://{{ inventory_hostname }}:9090/features
         validate_certs: false
         method: GET
@@ -52,21 +52,21 @@
       failed_when: false
 
     - name: Fetch Foreman settings from Satellite server
-      slurp:
+      ansible.builtin.slurp:
         src: /etc/foreman/settings.yaml
       register: foreman_settings
       delegate_to: "{{ groups.satellite[0] }}"
       when: capsule_info.status != 200
 
     - name: Fetch Satellite Capsule certificates from Satellite server
-      slurp:
+      ansible.builtin.slurp:
         src: /root/{{ inventory_hostname }}-certs.tar
       register: capsule_certs
       delegate_to: "{{ groups.satellite[0] }}"
       when: capsule_info.status != 200
 
     - name: Copy Satellite Capsule certificates to Satellite Capsule server
-      copy:
+      ansible.builtin.copy:
         content: "{{ capsule_certs.content | b64decode }}"
         dest: /root/{{ inventory_hostname }}-certs.tar
         mode: '0600'
@@ -77,20 +77,20 @@
         foreman_settings_yaml: "{{ foreman_settings.content | b64decode | from_yaml }}"
         oauth_consumer_key: "{{ foreman_settings_yaml[':oauth_consumer_key'] }}"
         oauth_consumer_secret: "{{ foreman_settings_yaml[':oauth_consumer_secret'] }}"
-      include_role:
+      ansible.builtin.include_role:
         name: redhat.satellite_operations.installer
       register: capsule_install
       when: capsule_info.status != 200
 
     - name: Verify Satellite Capsule status
-      uri:
+      ansible.builtin.uri:
         url: https://{{ inventory_hostname }}:9090/features
         validate_certs: true
         method: GET
       register: capsule_info
 
     - name: Connect Satellite Capsule to Red Hat Insights
-      command: satellite-installer --register-with-insights
+      ansible.builtin.command: satellite-installer --register-with-insights
       changed_when: true
       when:
         - satellite_capsule_register_insights | bool

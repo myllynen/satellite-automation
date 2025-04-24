@@ -5,7 +5,7 @@
   gather_facts: true
   tasks:
     - name: Fail if required parameters are not set
-      assert:
+      ansible.builtin.assert:
         that:
           - satellite_manifest_uuid is defined
           - satellite_manifest_uuid is not none
@@ -18,14 +18,14 @@
       when: satellite_manifest_download | bool
 
     - name: Copy local manifest to Satellite server
-      copy:
+      ansible.builtin.copy:
         src: "{{ satellite_manifest_file_local }}"
         dest: "{{ satellite_manifest_file_remote }}"
         mode: '0600'
       when: not satellite_manifest_download | bool
 
     - name: Check manifest file on Satellite server
-      stat:
+      ansible.builtin.stat:
         path: "{{ satellite_manifest_file_remote }}"
       register: manifest_file
       when: satellite_manifest_download | bool
@@ -42,7 +42,7 @@
         - not manifest_file.stat.exists
 
     - name: Change manifest file permissions
-      file:
+      ansible.builtin.file:
         path: "{{ satellite_manifest_file_remote }}"
         mode: '0600'
 

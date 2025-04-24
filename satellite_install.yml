@@ -5,7 +5,7 @@
   gather_facts: true
   tasks:
     - name: Fail if invalid Satellite URL defined
-      fail:
+      ansible.builtin.fail:
         msg: "Satellite URL must start with http:// or https://."
       when:
         - not satellite_server_url | default(true) or
@@ -13,7 +13,7 @@
            not satellite_server_url.startswith("https://"))
 
     - name: Install helpful packages
-      dnf:
+      ansible.builtin.dnf:
         name:
           - firewalld
           - insights-client
@@ -23,12 +23,12 @@
         state: present
 
     - name: Enable firewalld service
-      service:
+      ansible.builtin.service:
         name: firewalld
         enabled: true
 
     - name: Start firewalld service
-      service:
+      ansible.builtin.service:
         name: firewalld
         state: started
 
@@ -52,7 +52,7 @@
         - "'Unauthorized' in satellite_info.msg"
 
     - name: Install Satellite
-      include_role:
+      ansible.builtin.include_role:
         name: redhat.satellite_operations.installer
       register: satellite_install
       when: >
@@ -68,7 +68,7 @@
       register: satellite_info
 
     - name: Connect Satellite to Red Hat Insights
-      command: satellite-installer --register-with-insights
+      ansible.builtin.command: satellite-installer --register-with-insights
       changed_when: true
       when:
         - satellite_register_insights | bool
