@@ -40,16 +40,14 @@ installations.
 In a typical use case these playbooks and roles would be used to install
 Satellite and Capsules according to the provided configuration. After
 that the example `satellite_configure.yml` playbook together with the
-`vars_config.yml` file could be used as a starting point for defining
-a real site- or organization-specific setup based on local needs and
+`vars_config.yml` file could be used as a starting point for defining a
+real site- or organization-specific setup based on local needs and
 requirements.
 
 Note that the playbooks to install Satellite and Capsules expect basics
-such as VMs, networking, DNS, timesync,
-[repositories](https://github.com/myllynen/rhel-ansible-roles/tree/master/roles/repository_setup),
-and SELinux being configured in advance according to recommendations
-and
-[requirements](https://access.redhat.com/documentation/en-us/red_hat_satellite/).
+such as VMs, networking, DNS, timesync, RHEL repositories, and SELinux
+being configured in advance according to local and
+[Satellite requirements](https://access.redhat.com/documentation/en-us/red_hat_satellite/).
 Use
 [rhel-system-roles](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles)
 and
@@ -76,7 +74,7 @@ Capsules, and do initial Satellite configuration:
 vi inventory vault_satellite.yml
 vi vars_satellite.yml vars_manifest.yml vars_capsule.yml vars_config.yml
 # Install Red Hat Satellite
-ansible-playbook -i inventory satellite_manifest.yml \
+ansible-playbook -i inventory satellite_install.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
 # Upload or refresh manifest
 ansible-playbook -i inventory satellite_manifest.yml \

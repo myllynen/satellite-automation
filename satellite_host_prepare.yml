@@ -43,6 +43,7 @@
       - bash-completion
       - bind-utils
       - curl
+      - fapolicyd
       - firewalld
       - man-pages
       - nano
