@@ -15,10 +15,13 @@ satellite_capsule_register_insights: false
 satellite_installer_options:
   - --skip-checks-i-know-better
   - --certs-tar-file /root/{{ inventory_hostname }}-certs.tar
+  - --enable-foreman-proxy-plugin-ansible
   - --enable-foreman-proxy-plugin-openscap
   - --no-enable-foreman-proxy-plugin-discovery
   - --foreman-proxy-content-enable-ansible true
-  - --foreman-proxy-content-enable-docker false
+  - --foreman-proxy-content-enable-docker true
+  - --foreman-proxy-content-enable-ostree true
+  - --foreman-proxy-plugin-openscap-ansible-module
   - --foreman-proxy-register-in-foreman true
   - --foreman-proxy-foreman-base-url https://{{ groups.satellite[0] }}
   - --foreman-proxy-oauth-consumer-key '{{ oauth_consumer_key }}'

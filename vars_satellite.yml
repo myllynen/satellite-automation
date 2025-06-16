@@ -25,13 +25,18 @@ satellite_installer_options:
   - --foreman-initial-location "{{ satellite_location }}"
   - --tuning development
   - --skip-checks-i-know-better
+  - --enable-foreman-plugin-ansible
   - --enable-foreman-plugin-rh-cloud
   - --enable-foreman-plugin-remote-execution
   - --enable-foreman-plugin-openscap
   - --enable-foreman-plugin-webhooks
+  - --enable-foreman-proxy-plugin-ansible
   - --enable-foreman-proxy-plugin-openscap
   - --no-enable-foreman-plugin-discovery
   - --no-enable-foreman-proxy-plugin-discovery
   - --foreman-proxy-content-enable-ansible true
-  - --foreman-proxy-content-enable-docker false
+  - --foreman-proxy-content-enable-docker true
+  - --foreman-proxy-content-enable-ostree true
   - --foreman-plugin-tasks-automatic-cleanup true
+  - --foreman-plugin-rh-cloud-enable-iop-advisor-engine
+  - --foreman-proxy-plugin-openscap-ansible-module
