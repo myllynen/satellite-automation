@@ -48,7 +48,7 @@
         validate_certs: false
       register: satellite_info
       failed_when:
-        - "'msg' in satellite_info"
+        - satellite_info.msg is defined
         - "'Unauthorized' in satellite_info.msg"
 
     - name: Install Satellite
@@ -56,8 +56,8 @@
         name: redhat.satellite_operations.installer
       register: satellite_install
       when: >
-        ('msg' in satellite_info and "Connection refused" in satellite_info.msg) or
-        ('status' in satellite_info and 'result' in satellite_info.status and satellite_info.status.result != "ok")
+        (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
+        (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
 
     - name: Verify Satellite status
       redhat.satellite.status_info:
