@@ -71,6 +71,9 @@ satellite_products:
   - name: Red Hat Satellite Capsule
     repository_sets:
       - name: Red Hat Satellite Capsule 6.17 for RHEL 9 x86_64 (RPMs)
+        releasever: 6.17
+      - name: Red Hat Satellite Maintenance 6.17 for RHEL 9 x86_64 (RPMs)
+        releasever: 6.17
 
 
 #
@@ -79,7 +82,7 @@ satellite_products:
 satellite_sync_plans:
   - name: Weekly Red Hat repository sync
     interval: weekly
-    sync_date: 2022-01-01 02:02:00 +0000
+    sync_date: 2025-01-04 02:02:00 +0000
     enabled: true
     products:
       - Red Hat Satellite Capsule

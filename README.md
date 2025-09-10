@@ -18,6 +18,8 @@ Ansible playbooks for Red Hat Satellite automation.
   * Vars file for configuring Satellite
 * [vault_satellite.yml](vault_satellite.yml)
   * Unencrypted example vault file
+* [satellite_host_prepare.yml](satellite_host_prepare.yml)
+  * Playbook to prepare hosts for installation
 * [satellite_install.yml](satellite_install.yml)
   * Playbook to install Red Hat Satellite
 * [satellite_manifest.yml](satellite_manifest.yml)
@@ -52,7 +54,8 @@ Use
 [rhel-system-roles](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhel_system_roles)
 and
 [rhel-ansible-roles](https://github.com/myllynen/rhel-ansible-roles)
-to apply such basic configurations as needed.
+to apply such basic configurations as needed. Use the example
+`satellite_host_prepare.yml` playbook to automate this process.
 
 To use a custom certificate with Satellite please refer to the Satellite
 installation guide for the needed installer parameters. By default a
@@ -73,21 +76,37 @@ Capsules, and do initial Satellite configuration:
 # Edit inventory and settings to suite local environment
 vi inventory vault_satellite.yml
 vi vars_satellite.yml vars_manifest.yml vars_capsule.yml vars_config.yml
+# Configure connected Satellite host repositories
+# This requires RHEL system roles to be installed on the current host
+# If RHEL system roles not available or in a disconnected environment,
+# configure the required repos manually using subscription-manager
+ansible-playbook -i inventory satellite_host_repos.yml \
+  -e @vault_satellite.yml
+# Prepare Satellite/Capsule hosts for installation,
+# make sure to review SSH/user config before applying
+vi satellite_host_prepare.yml
+ansible-playbook -i inventory satellite_host_prepare.yml
 # Install Red Hat Satellite
 ansible-playbook -i inventory satellite_install.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
 # Upload or refresh manifest
 ansible-playbook -i inventory satellite_manifest.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_manifest.yml
+# Apply initial Satellite configuration
+ansible-playbook -i inventory satellite_configure.yml \
+  -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
+# Sync enabled repositories on Satellite
+ansible-playbook -i inventory satellite_sync_repos.yml \
+  -e @vault_satellite.yml -e @vars_satellite.yml
+# Configure Capsule host repositories using Satellite
+# This requires RHEL system roles to be installed on the current host
+# If RHEL system roles not available, configure the required repos manually
+ansible-playbook -i inventory capsule_host_repos.yml \
+  -e @vault_satellite.yml
 # Install Satellite Capsules
 ansible-playbook -i inventory capsule_install.yml \
   -e @vars_capsule.yml
-# Configure Satellite
-ansible-playbook -i inventory satellite_configure.yml \
-  -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
-# Sync repositories
-ansible-playbook -i inventory satellite_sync_repos.yml \
-  -e @vault_satellite.yml -e @vars_satellite.yml
+# ... proceed to complete full configuration ...
 ```
 
 ## See Also

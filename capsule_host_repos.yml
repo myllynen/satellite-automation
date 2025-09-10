@@ -1,0 +1,33 @@
+---
+- name: Configure Capsule host repositories using Satellite
+  hosts: capsules
+  become: true
+  gather_facts: true
+  vars:
+    satellite_version: 6.17
+    rhc_state: present
+    rhc_auth:
+      login:
+        # These should come from vault
+        username: "{{ satellite_rhsm_username }}"
+        password: "{{ satellite_rhsm_password }}"
+    #rhc_proxy:
+    #  hostname: "proxy-hostname"
+    #  scheme: http
+    #  port: 4321
+    #  # These should come from vault
+    #  username: "proxy-hostname"
+    #  password: "proxy-password"
+    # This should be the local Satellite FQDN
+    rhc_server:
+      hostname: "{{ groups.satellite[0] }}"
+    rhc_repositories:
+      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
+      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
+      - name: satellite-capsule-{{ satellite_version }}-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
+      - name: satellite-maintenance-{{ satellite_version }}-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
+    # Insights is configured as part of Satellite/Capsule installation
+    rhc_insights:
+      state: absent
+  roles:
+    - redhat.rhel_system_roles.rhc
