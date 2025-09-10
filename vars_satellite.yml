@@ -41,4 +41,4 @@ satellite_installer_options:
   - --foreman-proxy-content-enable-docker true
   - --foreman-plugin-tasks-automatic-cleanup true
   - --foreman-proxy-plugin-openscap-ansible-module true
-#  - --foreman-plugin-rh-cloud-enable-iop-advisor-engine true
+  - --foreman-plugin-rh-cloud-enable-iop-advisor-engine true

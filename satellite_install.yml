@@ -17,6 +17,7 @@
         name:
           - firewalld
           - insights-client
+          - podman
           - rhc
           - satellite-installer
           - sos
@@ -50,6 +51,21 @@
       failed_when:
         - satellite_info.msg is defined
         - "'Unauthorized' in satellite_info.msg"
+
+    - name: Login to Red Hat container registry for Advisor installation
+      no_log: true
+      ansible.builtin.shell: >
+        set -o pipefail ;
+        echo '{{ satellite_rhsm_password }}' |
+        podman login
+        --username {{ satellite_rhsm_username }}
+        --password-stdin
+        registry.redhat.io
+      changed_when: true
+      when:
+        - "'--foreman-plugin-rh-cloud-enable-iop-advisor-engine true' in satellite_installer_options"
+        - (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
+          (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
 
     - name: Install Satellite
       ansible.builtin.include_role:
