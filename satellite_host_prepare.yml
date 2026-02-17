@@ -52,6 +52,7 @@
       - rsync
       - sos
       - tar
+      - tpm2-tools
       - zstd
     packages_install_weak_deps: true
     packages_install_display_results: true
@@ -62,7 +63,7 @@
       - rhn*
       - telnet-server
       - flashrom
-      #- fonts*
+      #- '*fonts*'
       - gawk-all-langpacks
       - gcc*
       - geolite*
@@ -72,7 +73,7 @@
       - kernel-tools*
       - NetworkManager-team
       - NetworkManager-tui
-      - parted
+      - python3-perf
       #- sssd*
       #- libsss*
     packages_remove_autoremove: false
