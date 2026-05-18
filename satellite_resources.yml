@@ -1,0 +1,19 @@
+---
+- name: Get Satellite Resources
+  hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Get resource information
+      redhat.satellite.resource_info:
+        server_url: "{{ satellite_server_url }}"
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        organization: "{{ satellite_organization }}"
+        resource: repositories
+      register: resource
+
+    - name: Display resource information
+      ansible.builtin.debug:
+        var: resource.resources

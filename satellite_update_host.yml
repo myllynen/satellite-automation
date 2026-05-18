@@ -1,0 +1,139 @@
+---
+# This is officially unsupported method so use with caution
+- name: Update Red Hat Satellite/Capsule host RHEL packages
+  hosts: satellite,capsules
+  become: true
+  gather_facts: true
+  serial: 1
+  any_errors_fatal: true
+  vars:
+    always_reboot: false
+    display_package_updates: true
+    pause_after_any_updates: true
+    pause_between_hosts_minutes: 1
+    skip_pause_on_last_host: true
+
+  tasks:
+    - name: Check repository configuration
+      check_mode: false
+      ansible.builtin.command: dnf repolist -C --enabled --noplugins
+      register: dnf_repolist
+      changed_when: false
+
+    # Use dnf command to avoid the need to unlock packages for the check
+    - name: Check host RHEL package updates
+      vars:
+        client_repo: "{{ 'satellite-client-6-for-rhel-' + ansible_facts.distribution_major_version + '-x86_64-rpms' }}"
+        satellite_client: "{{ true if 'satellite-client' in dnf_repolist.stdout else false }}"
+        enable_client_repo: "{{ '--enablerepo=' + client_repo if satellite_client else '' }}"
+      check_mode: false
+      ansible.builtin.command: >
+        dnf check-upgrade
+        --quiet
+        --refresh
+        --disablerepo=*
+        --enablerepo=rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
+        --enablerepo=rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
+        {{ enable_client_repo }}
+      register: update_check
+      failed_when: update_check.rc not in [0, 100]
+      changed_when: false
+
+    - name: Display pending updates in check mode
+      vars:
+        pending_updates: "{{ update_check.stdout_lines | default([]) | select
+                             | map('regex_replace', '^(.*)\\s+\\S+$', '\\1') | sort }}"
+      ansible.builtin.debug:
+        msg: "{{ pending_updates | join('\n') }}"
+      when:
+        - ansible_check_mode
+        - display_package_updates
+        - pending_updates | length > 0
+
+    - name: Run pre-update health check
+      check_mode: false
+      ansible.builtin.command: satellite-maintain health check --plaintext
+      changed_when: false
+      when: update_check.rc == 100
+
+    - name: Check package lock status
+      ansible.builtin.command: satellite-maintain packages status
+      register: package_lock
+      changed_when: false
+
+    - name: Unlock packages
+      ansible.builtin.command: satellite-maintain packages unlock
+      changed_when: true
+      when:
+        - update_check.rc == 100
+        - "'Packages are locked' in package_lock.stdout"
+
+    - name: Update and lock packages
+      block:
+        - name: Update RHEL packages
+          # noqa: package-latest
+          vars:
+            client_repo: "{{ 'satellite-client-6-for-rhel-' + ansible_facts.distribution_major_version + '-x86_64-rpms' }}"
+            satellite_client: "{{ true if 'satellite-client' in dnf_repolist.stdout else false }}"
+            repos_enable:
+              - rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
+              - rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
+              - "{{ client_repo if satellite_client else '' }}"
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
+            disablerepo: '*'
+            enablerepo: "{{ repos_enable | select }}"
+          register: package_install
+          when:
+            - not ansible_check_mode
+            - update_check.rc == 100
+
+      always:
+        - name: Lock packages
+          ansible.builtin.command: satellite-maintain packages lock
+          changed_when: true
+          when: >
+            package_install is changed or
+            'Packages are locked' not in package_lock.stdout
+
+    - name: Display updated packages
+      vars:
+        package_updates: "{{ package_install.results | default([]) | sort }}"
+      ansible.builtin.debug:
+        msg: "{{ package_updates | join('\n') }}"
+      when:
+        - display_package_updates
+        - package_updates | length > 0
+
+    - name: Check need for rebooting
+      check_mode: false
+      ansible.builtin.shell: |
+        dnf -C --disableplugin=product-id,subscription-manager needs-restarting || :
+        dnf -C --disableplugin=product-id,subscription-manager needs-restarting -r > /dev/null 2>&1
+      register: needs_rebooting
+      failed_when: false
+      changed_when: false
+
+    - name: Reboot system
+      ansible.builtin.reboot:
+      register: system_reboot
+      when: (always_reboot | bool) or
+            ((needs_rebooting.stdout_lines is defined and
+              needs_rebooting.stdout_lines | length > 0) or
+             (needs_rebooting.rc is defined and
+              needs_rebooting.rc != 0))
+
+    - name: Run post-update health check
+      ansible.builtin.command: satellite-maintain health check --plaintext
+      changed_when: false
+      when: package_install is changed
+
+    - name: Pause after updates
+      ansible.builtin.pause:
+        minutes: "{{ pause_between_hosts_minutes }}"
+      when:
+        - inventory_hostname != ansible_play_hosts[-1] or
+          not skip_pause_on_last_host | bool
+        - system_reboot is changed or
+          (pause_after_any_updates | bool and package_install is changed)

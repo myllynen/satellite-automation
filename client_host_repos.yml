@@ -1,0 +1,50 @@
+---
+- name: Configure managed host repositories using Satellite
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    rhc_repositories:
+      # https://github.com/linux-system-roles/rhc/issues/143
+      #- {name: '*', state: disabled}
+      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
+      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
+      - name: satellite-client-6-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
+    rhc_insights:
+      state: absent
+
+  tasks:
+    - name: Generate registration command
+      redhat.satellite.registration_command:
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        server_url: "{{ satellite_server_url }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        insecure: "{{ not satellite_validate_certs }}"
+        jwt_expiration: 1
+        activation_keys:
+          - AK_Test_RHEL_9
+        hostgroup: HG_Test
+        setup_insights: false
+        setup_remote_execution: false
+        setup_remote_execution_pull: false
+        setup_container_registry_certs: true
+        update_packages: false
+        # https://github.com/theforeman/foreman-ansible-modules/issues/1975
+        #packages:
+        #  - foreman_scap_client_bash
+        #  - katello-host-tools-tracer
+        packages: foreman_scap_client_bash katello-host-tools-tracer
+      register: registration_command
+      delegate_to: localhost
+      run_once: true
+
+    - name: Register host to Satellite
+      # noqa: command-instead-of-shell
+      ansible.builtin.shell:
+        cmd: "{{ registration_command.registration_command }}"
+      changed_when: true
+
+    - name: Configure host repositories
+      ansible.builtin.include_role:
+        name: redhat.rhel_system_roles.rhc

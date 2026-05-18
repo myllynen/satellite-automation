@@ -1,0 +1,57 @@
+---
+- name: Sync Satellite content to Capsule
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  vars:
+    satellite_capsule_complete_sync: true
+
+  tasks:
+    - name: Get list of Capsules
+      ansible.builtin.uri:
+        url: "{{ satellite_server_url }}/api/v2/smart_proxies"
+        url_username: "{{ satellite_username }}"
+        url_password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        force_basic_auth: true
+        method: GET
+      register: satellite_capsules
+      changed_when: false
+
+    - name: Start Capsule sync from Satellite
+      ansible.builtin.uri:
+        url: "{{ satellite_server_url }}/katello/api/v2/capsules/{{ item.id }}/content/sync"
+        url_username: "{{ satellite_username }}"
+        url_password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        force_basic_auth: true
+        method: POST
+        body_format: json
+        body:
+          # Set check for Complete Sync
+          skip_metadata_check: "{{ satellite_capsule_complete_sync | bool }}"
+        status_code:
+          - 202
+      register: sync_tasks
+      changed_when: true
+      loop: "{{ satellite_capsules.json.results | selectattr('id', 'gt', 1) }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Wait Capsule sync to complete
+      ansible.builtin.uri:
+        url: "{{ satellite_server_url }}/foreman_tasks/api/tasks/{{ item.json.id }}"
+        url_username: "{{ satellite_username }}"
+        url_password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        force_basic_auth: true
+        method: GET
+      register: task_status
+      failed_when: task_status.json.result != 'success'
+      loop: "{{ sync_tasks.results }}"
+      loop_control:
+        label: "{{ item.url | urlsplit('hostname') }}"
+      until: task_status.json.state == 'stopped'
+      retries: 120
+      delay: 5
