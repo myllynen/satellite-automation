@@ -1,0 +1,37 @@
+#!/bin/sh
+
+TARGET_HOST="client1.example.com"
+
+hammer --csv arf-report list \
+  --search "host = $TARGET_HOST" \
+  --fields "Id,Reported at,Passed,Failed,Othered,Policy name" \
+  | tail -n +2 \
+  | tac \
+  | awk -F, '
+    BEGIN {
+      printf "\033[1m%-6s | %-23s | %-6s | %-6s | %-6s | %s\033[0m\n", "ID", "REPORTED AT", "PASS", "FAIL", "OTHER", "DRIFT STATUS / POLICY"
+      print "------------------------------------------------------------------------------------------------------------------------"
+    }
+
+    NR == 1 {
+      # Map variables based on Hammer output
+      p_pass=$4; p_fail=$5; p_oth=$6
+      policy=$3; gsub(/"/, "", policy) # Clean up any encapsulating quotes
+
+      printf "%-6s | %-23s | %-6s | %-6s | %-6s | \033[1;34m%-17s\033[0m (%s)\n", $1, $2, $4, $5, $6, "[BASELINE]", policy
+      next
+    }
+
+    {
+      policy=$3; gsub(/"/, "", policy)
+
+      if ($4 != p_pass || $5 != p_fail || $6 != p_oth) {
+        printf "%-6s | %-23s | %-6s | %-6s | %-6s | \033[1;31m%-17s\033[0m (%s)\n", $1, $2, $4, $5, $6, "[CHANGED! DRIFT]", policy
+      } else {
+        next
+      }
+
+      # Update trailing metrics
+      p_pass=$4; p_fail=$5; p_oth=$6
+    }
+  '
