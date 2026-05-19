@@ -15,13 +15,12 @@
         creates: /root/{{ inventory_hostname }}-certs.tar
       delegate_to: "{{ groups.satellite[0] }}"
 
-    - name: Install helpful packages
+    - name: Install required packages
       ansible.builtin.dnf:
         name:
           - firewalld
-          - insights-client
-          - rhc
-          - satellite-installer
+          - podman
+          - satellite-capsule
           - sos
         state: present
 
@@ -82,17 +81,7 @@
       register: capsule_install
       when: capsule_info.status != 200
 
-    - name: Verify Satellite Capsule status
-      ansible.builtin.uri:
-        url: https://{{ inventory_hostname }}:9090/features
-        validate_certs: true
-        method: GET
-      register: capsule_info
-
-    - name: Connect Satellite Capsule to Red Hat Insights
-      ansible.builtin.command: satellite-installer --register-with-insights
-      changed_when: true
-      when:
-        - satellite_capsule_register_insights | bool
-        - capsule_install is changed
-        - capsule_info.status == 200
+    - name: Run post-install health check
+      ansible.builtin.command: satellite-maintain health check --plaintext
+      changed_when: false
+      when: capsule_install is changed

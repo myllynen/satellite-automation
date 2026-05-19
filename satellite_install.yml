@@ -12,14 +12,12 @@
           (not satellite_server_url.startswith("http://") and
            not satellite_server_url.startswith("https://"))
 
-    - name: Install helpful packages
+    - name: Install required packages
       ansible.builtin.dnf:
         name:
           - firewalld
-          - insights-client
           - podman
-          - rhc
-          - satellite-installer
+          - satellite
           - sos
         state: present
 
@@ -52,20 +50,29 @@
         - satellite_info.msg is defined
         - "'Unauthorized' in satellite_info.msg"
 
-    - name: Login to Red Hat container registry for Advisor installation
+    - name: Check Red Hat container registry login status
+      ansible.builtin.command: >
+        podman login --authfile /etc/foreman/registry-auth.json --get-login registry.redhat.io
+      register: podman_login
+      failed_when: false
+      changed_when: false
+      when:
+        - "'--enable-iop' in satellite_installer_options"
+        - (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
+          (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
+
+    - name: Login to Red Hat container registry for Lightspeed installation
       no_log: true
       ansible.builtin.shell: >
-        set -o pipefail ;
+        set -o pipefail &&
         echo '{{ satellite_rhsm_password }}' |
-        podman login
-        --username {{ satellite_rhsm_username }}
-        --password-stdin
+        podman login --authfile /etc/foreman/registry-auth.json
+        --username {{ satellite_rhsm_username }} --password-stdin
         registry.redhat.io
       changed_when: true
       when:
-        - "'--foreman-plugin-rh-cloud-enable-iop-advisor-engine true' in satellite_installer_options"
-        - (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
-          (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
+        - podman_login is not skipped
+        - "'not logged into' in podman_login.stderr"
 
     - name: Install Satellite
       ansible.builtin.include_role:
@@ -75,18 +82,7 @@
         (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
         (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
 
-    - name: Verify Satellite status
-      redhat.satellite.status_info:
-        server_url: "{{ satellite_server_url }}"
-        username: "{{ satellite_username }}"
-        password: "{{ satellite_password }}"
-        validate_certs: "{{ satellite_validate_certs }}"
-      register: satellite_info
-
-    - name: Connect Satellite to Red Hat Insights
-      ansible.builtin.command: satellite-installer --register-with-insights
-      changed_when: true
-      when:
-        - satellite_register_insights | bool
-        - satellite_install is not skipped
-        - ('status' in satellite_info and 'result' in satellite_info.status and satellite_info.status.result == 'ok')
+    - name: Run post-install health check
+      ansible.builtin.command: satellite-maintain health check --plaintext
+      changed_when: false
+      when: satellite_install is changed

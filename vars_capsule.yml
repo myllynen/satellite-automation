@@ -9,8 +9,6 @@ satellite_installer_timeout: 1800
 
 satellite_capsule_firewall_zone: public
 
-satellite_capsule_register_insights: false
-
 # capsule_install.yml will set the oauth variables
 satellite_installer_options:
   - --skip-checks-i-know-better
@@ -20,9 +18,10 @@ satellite_installer_options:
   - --no-enable-foreman-proxy-plugin-discovery
   - --foreman-proxy-content-enable-ansible true
   - --foreman-proxy-content-enable-docker true
-  - --foreman-proxy-content-enable-ostree true
-  - --foreman-proxy-plugin-openscap-ansible-module
+  - --foreman-proxy-plugin-openscap-ansible-module true
   - --foreman-proxy-register-in-foreman true
+  - --foreman-proxy-registration true
+  - --foreman-proxy-templates true
   - --foreman-proxy-foreman-base-url https://{{ groups.satellite[0] }}
   - --foreman-proxy-oauth-consumer-key '{{ oauth_consumer_key }}'
   - --foreman-proxy-oauth-consumer-secret '{{ oauth_consumer_secret }}'

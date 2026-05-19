@@ -1,6 +1,6 @@
 ---
 - name: Prepare host for Satellite/Capsule installation
-  hosts: all
+  hosts: satellite,capsules
   become: true
   gather_facts: false
   vars:

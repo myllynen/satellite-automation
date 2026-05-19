@@ -1,10 +1,61 @@
 ---
 - name: Configure Red Hat Satellite
-  hosts: satellite
-  become: true
-  gather_facts: true
+  hosts: localhost
+  become: false
+  gather_facts: false
+  vars:
+    # Set to false to apply initial pre-sync config only
+    satellite_full_config: true
+    # Set to false to avoid publishing new content views
+    satellite_content_view_publish: true
+
   roles:
-    - redhat.satellite.settings
-    - redhat.satellite.lifecycle_environments
-    - redhat.satellite.repositories
-    - redhat.satellite.sync_plans
+    - role: redhat.satellite.settings
+    - role: redhat.satellite.repositories
+    - role: redhat.satellite.sync_plans
+    - role: redhat.satellite.lifecycle_environments
+    - role: redhat.satellite.content_views
+      vars:
+        satellite_content_views: "{{ satellite_content_view_definitions }}"
+    # The following can be applied only after running satellite_sync_repos.yml
+    - role: redhat.satellite.content_view_publish
+      when:
+        - satellite_full_config | bool
+        - satellite_content_view_publish | bool
+      vars:
+        satellite_content_views: "{{ satellite_content_view_promotions_testing }}"
+    - role: redhat.satellite.activation_keys
+      when: satellite_full_config | bool
+    - role: redhat.satellite.hostgroups
+      when: satellite_full_config | bool
+
+  post_tasks:
+    - name: Get list of Capsules
+      ansible.builtin.uri:
+        url: "{{ satellite_server_url }}/api/v2/smart_proxies"
+        url_username: "{{ satellite_username }}"
+        url_password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        force_basic_auth: true
+        method: GET
+      register: satellite_capsules
+      changed_when: false
+
+    - name: Configure Satellite Capsule
+      redhat.satellite.smart_proxy:
+        server_url: "{{ satellite_server_url }}"
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        name: "{{ item.name }}"
+        url: https://{{ item.name }}:9090
+        organizations: "{{ item.organizations | default(omit) }}"
+        locations: "{{ item.locations | default(omit) }}"
+        lifecycle_environments: "{{ item.lifecycle_environments | default(omit) }}"
+        download_policy: "{{ item.download_policy | default(omit) }}"
+      loop: "{{ satellite_capsule_settings }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when:
+        - satellite_full_config | bool
+        - item.name in satellite_capsules.json.results | map(attribute='name')

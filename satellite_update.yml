@@ -38,7 +38,7 @@
           - current_repo in dnf_repolist.stdout
         quiet: true
         fail_msg: >
-          Only version {{satellite_versions.current_satellite_version }}
+          Only version {{ satellite_versions.current_satellite_version }}
           repositories must be enabled prior to the update.
 
     - name: Check updates

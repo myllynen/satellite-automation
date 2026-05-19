@@ -4,7 +4,7 @@
   become: true
   gather_facts: true
   vars:
-    satellite_version: 6.17
+    satellite_version: 6.19
     rhc_state: present
     rhc_auth:
       login:
@@ -22,12 +22,14 @@
     #rhc_server:
     #  hostname:
     rhc_repositories:
+      # https://github.com/linux-system-roles/rhc/issues/143
+      - {name: '*', state: disabled}
       - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
       - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
       - name: satellite-{{ satellite_version }}-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
       - name: satellite-maintenance-{{ satellite_version }}-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
-    # Insights is configured as part of Satellite/Capsule installation
     rhc_insights:
       state: absent
+
   roles:
     - redhat.rhel_system_roles.rhc
