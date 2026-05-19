@@ -1,6 +1,13 @@
+[localhost]
+localhost ansible_connection=local
+
 [satellite]
 satellite.example.com
 
 [capsules]
 capsule1.example.com
 capsule2.example.com
+
+[clients]
+client1.example.com
+client2.example.com

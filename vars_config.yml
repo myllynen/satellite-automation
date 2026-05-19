@@ -1,12 +1,39 @@
+# Red Hat Satellite configuration as code using redhat.satellite
+#
+# For available settings and their current default values see:
+# https://satellite.example.com/api/settings/?per_page=1000
+
 #
 # Satellite Settings
 #
 satellite_settings:
+  # Web UI
   - name: login_text
     value: Welcome to Satellite!
   - name: entries_per_page
     value: 100
 
+  # Subscription / Insights / Lightspeed
+  - name: subscription_connection_enabled
+    value: true
+  - name: allow_auto_inventory_upload
+    value: false
+  - name: allow_auto_insights_sync
+    value: false
+  - name: insights_minimal_data_collection
+    value: true
+  - name: allow_auto_insights_mismatch_delete
+    value: false
+  - name: obfuscate_inventory_hostnames
+    value: true
+  - name: obfuscate_inventory_ips
+    value: true
+  - name: exclude_installed_packages
+    value: true
+  - name: include_parameter_tags
+    value: false
+
+  # Content
   - name: default_download_policy
     value: immediate
   - name: default_proxy_download_policy
@@ -14,6 +41,9 @@ satellite_settings:
   - name: default_redhat_download_policy
     value: immediate
 
+  # Templates
+  - name: show_unsupported_templates
+    value: false
   - name: template_sync_associate
     value: never
   - name: template_sync_branch
@@ -25,65 +55,197 @@ satellite_settings:
   - name: template_sync_lock
     value: "lock"
 
+  # Hosts
   - name: errata_status_installable
     value: true
+  - name: update_subnets_from_facts
+    value: "true"
   - name: unregister_delete_host
     value: true
 
+  # Notifications
+  - name: rss_enable
+    value: false
+  - name: delivery_method
+    value: SMTP
 
 #
-# Satellite Lifecycle Environments
+# Satellite Authentication
+# Satellite Users and Groups
+# Satellite Roles
 #
-satellite_lifecycle_environments:
-  - name: Development
-    prior: Library
-
-  - name: Testing
-    prior: Development
-
-  - name: Production
-    prior: Testing
-
 
 #
 # Satellite Products
 #
 satellite_products:
-  #
-  # Red Hat repositories
-  #
-  # RHEL repositories
+  - name: Microsoft Packages for RHEL
+    repositories:
+      - name: Microsoft Packages for RHEL 9
+        content_type: yum
+        url: https://packages.microsoft.com/rhel/9/prod/
+        download_policy: immediate
+        mirroring_policy: mirror_content_only
+
   - name: Red Hat Enterprise Linux for x86_64
     repository_sets:
-      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
-        releasever: 9
+      #- name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)
+      #  releasever: 9.7
       - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
         releasever: 9
-
-      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)
-        releasever: 9.6
-      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)
-        releasever: 9.6
+      #- name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)
+      #  releasever: 9.7
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+        releasever: 9
 
       - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
+      - name: Red Hat Satellite Maintenance 6.19 for RHEL 9 x86_64 (RPMs)
+      - name: Red Hat Satellite Utils 6.19 for RHEL 9 x86_64 (RPMs)
 
-  # Satellite Capsule repositories
   - name: Red Hat Satellite Capsule
     repository_sets:
-      - name: Red Hat Satellite Capsule 6.17 for RHEL 9 x86_64 (RPMs)
-        releasever: 6.17
-      - name: Red Hat Satellite Maintenance 6.17 for RHEL 9 x86_64 (RPMs)
-        releasever: 6.17
-
+      - name: Red Hat Satellite Capsule 6.19 for RHEL 9 x86_64 (RPMs)
 
 #
 # Satellite Sync Plans
 #
 satellite_sync_plans:
-  - name: Weekly Red Hat repository sync
-    interval: weekly
-    sync_date: 2025-01-04 02:02:00 +0000
+  - name: Daily Microsoft repository sync
+    interval: daily
+    # Must use UTC timestamp for idempotency
+    sync_date: 2026-01-03 00:02:00 +0000
     enabled: true
     products:
-      - Red Hat Satellite Capsule
+      - Microsoft Packages for RHEL
+
+  - name: Daily Red Hat repository sync
+    interval: daily
+    # Must use UTC timestamp for idempotency
+    sync_date: 2026-01-03 01:02:00 +0000
+    enabled: true
+    products:
       - Red Hat Enterprise Linux for x86_64
+      - Red Hat Satellite Capsule
+
+#
+# Satellite Lifecycle Environments
+#
+satellite_lifecycle_environments:
+  - name: LE_Testing
+    prior: Library
+
+  - name: LE_Production
+    prior: LE_Testing
+
+#
+# Satellite Content Views - definitions
+#
+satellite_content_view_definitions:
+  - name: CV_RHEL_9
+    repositories:
+      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream RPMs 9
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS RPMs 9
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs
+        product: Red Hat Enterprise Linux for x86_64
+    solve_dependencies: false
+
+  - name: CV_RHEL_9_Capsule
+    repositories:
+      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream RPMs 9
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS RPMs 9
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Satellite Maintenance 6.19 for RHEL 9 x86_64 RPMs
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Satellite Utils 6.19 for RHEL 9 x86_64 RPMs
+        product: Red Hat Enterprise Linux for x86_64
+      - name: Red Hat Satellite Capsule 6.19 for RHEL 9 x86_64 RPMs
+        product: Red Hat Satellite Capsule
+    solve_dependencies: false
+
+  - name: CV_RHEL_9_Microsoft
+    repositories:
+      - name: Microsoft Packages for RHEL 9
+        product: Microsoft Packages for RHEL
+    solve_dependencies: false
+
+  - name: CCV_RHEL_9_Microsoft
+    composite: true
+    components:
+      - content_view: CV_RHEL_9
+        latest: true
+      - content_view: CV_RHEL_9_Microsoft
+        latest: true
+
+#
+# Satellite Content Views - promotions
+#
+satellite_content_view_promotions_testing:
+  - content_view: CV_RHEL_9
+    lifecycle_environments:
+      - LE_Testing
+
+  - content_view: CV_RHEL_9_Capsule
+    lifecycle_environments:
+      - LE_Testing
+
+  - content_view: CV_RHEL_9_Microsoft
+    lifecycle_environments:
+      - LE_Testing
+
+  - content_view: CCV_RHEL_9_Microsoft
+    lifecycle_environments:
+      - LE_Testing
+
+#
+# Satellite Activation Keys
+#
+satellite_activation_keys:
+  - name: AK_Test_RHEL_9_Microsoft
+    lifecycle_environment: LE_Testing
+    content_view: CCV_RHEL_9_Microsoft
+    content_overrides:
+      - label: satellite-client-6-for-rhel-9-x86_64-rpms
+        override: enabled
+      - label: Acme_Enterprises_Microsoft_Packages_for_RHEL_Microsoft_Packages_for_RHEL_9
+        override: enabled
+    service_level: Self-Support
+    purpose_usage: Development/Test
+    purpose_role: Red Hat Enterprise Linux Server
+
+  - name: AK_Test_RHEL_9_Capsule
+    lifecycle_environment: LE_Testing
+    content_view: CV_RHEL_9_Capsule
+    content_overrides:
+      - label: satellite-client-6-for-rhel-9-x86_64-rpms
+        override: enabled
+      - label: satellite-capsule-6.19-for-rhel-9-x86_64-rpms
+        override: enabled
+      - label: satellite-maintenance-6.19-for-rhel-9-x86_64-rpms
+        override: enabled
+    service_level: Self-Support
+    purpose_usage: Development/Test
+    purpose_role: Red Hat Enterprise Linux Server
+
+#
+# Satellite Host Groups
+#
+satellite_hostgroups:
+  - name: HG_Test
+  - name: HG_Test-RHEL-9-Base
+    parent: HG_Test
+  - name: HG_Test-RHEL-9-Apps
+    parent: HG_Test/HG_Test-RHEL-9-Base
+
+#
+# Satellite Capsule Settings
+#
+satellite_capsule_settings:
+  - name: capsule1.example.com
+    lifecycle_environments:
+      - LE_Testing
+    download_policy: immediate
