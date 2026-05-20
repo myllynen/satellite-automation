@@ -112,14 +112,14 @@ ansible-playbook -i inventory satellite_install.yml \
 # Upload or refresh manifest
 ansible-playbook -i inventory satellite_manifest.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_manifest.yml
-# Apply initial Satellite configuration
+# Apply initial Satellite configuration, including products and repos
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml \
   -e satellite_full_config=false
 # Sync enabled repositories on Satellite
 ansible-playbook -i inventory satellite_sync_repos.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
-# Apply full Satellite configuration, including AKs, CVs, and HGs
+# Apply full Satellite configuration, including AKs, CVs, and CCVs
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
 # Configure Capsule hosts repositories using Satellite
@@ -134,7 +134,7 @@ ansible-playbook -i inventory -l capsules satellite_host_prepare.yml
 # Install Satellite Capsules
 ansible-playbook -i inventory capsule_install.yml \
   -e @vars_capsule.yml
-# Apply full Satellite configuration, including Capsules
+# Apply full Satellite configuration, including Capsules and HGs
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
   -e satellite_content_view_publish=false

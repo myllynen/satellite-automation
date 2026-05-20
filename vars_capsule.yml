@@ -9,6 +9,9 @@ satellite_installer_timeout: 1800
 
 satellite_capsule_firewall_zone: public
 
+# Needed for pull mode remote execution
+satellite_capsule_firewall_allow_mqtt: true
+
 # capsule_install.yml will set the oauth variables
 satellite_installer_options:
   - --skip-checks-i-know-better
@@ -19,6 +22,7 @@ satellite_installer_options:
   - --foreman-proxy-content-enable-ansible true
   - --foreman-proxy-content-enable-docker true
   - --foreman-proxy-plugin-openscap-ansible-module true
+  - --foreman-proxy-plugin-remote-execution-script-mode pull-mqtt
   - --foreman-proxy-register-in-foreman true
   - --foreman-proxy-registration true
   - --foreman-proxy-templates true

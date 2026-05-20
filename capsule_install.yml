@@ -35,12 +35,17 @@
         state: started
 
     - name: Configure Satellite Capsule firewall
+      vars:
+        capsule_firewall_services:
+          - RH-Satellite-6-capsule
+          - "{{ 'mqtt' if satellite_capsule_firewall_allow_mqtt | bool else '' }}"
       ansible.posix.firewalld:
-        service: RH-Satellite-6-capsule
+        service: "{{ item }}"
         zone: "{{ satellite_capsule_firewall_zone }}"
         state: enabled
         immediate: true
         permanent: true
+      loop: "{{ capsule_firewall_services | select }}"
 
     - name: Check Satellite Capsule status
       ansible.builtin.uri:

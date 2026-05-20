@@ -32,12 +32,17 @@
         state: started
 
     - name: Configure Satellite firewall
+      vars:
+        satellite_firewall_services:
+          - RH-Satellite-6
+          - "{{ 'mqtt' if satellite_firewall_allow_mqtt | bool else '' }}"
       ansible.posix.firewalld:
-        service: RH-Satellite-6
+        service: "{{ item }}"
         zone: "{{ satellite_firewall_zone }}"
         state: enabled
         immediate: true
         permanent: true
+      loop: "{{ satellite_firewall_services | select }}"
 
     - name: Check Satellite status
       redhat.satellite.status_info:

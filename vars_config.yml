@@ -56,6 +56,8 @@ satellite_settings:
     value: "lock"
 
   # Hosts
+  - name: remote_execution_prefer_registered_through_proxy
+    value: true
   - name: errata_status_installable
     value: true
   - name: update_subnets_from_facts
@@ -113,6 +115,7 @@ satellite_sync_plans:
   - name: Daily Microsoft repository sync
     interval: daily
     # Must use UTC timestamp for idempotency
+    # https://github.com/theforeman/foreman-ansible-modules/issues/1804
     sync_date: 2026-01-03 00:02:00 +0000
     enabled: true
     products:
@@ -235,11 +238,26 @@ satellite_activation_keys:
 # Satellite Host Groups
 #
 satellite_hostgroups:
-  - name: HG_Test
-  - name: HG_Test-RHEL-9-Base
-    parent: HG_Test
-  - name: HG_Test-RHEL-9-Apps
-    parent: HG_Test/HG_Test-RHEL-9-Base
+  - parent: null
+    name: HG_Test
+    organization: Acme Enterprises
+    content_source: capsule1.example.com
+    lifecycle_environment: LE_Testing
+    content_view: CV_RHEL_9
+    openscap_proxy: capsule1.example.com
+    domain: example.com
+    architecture: x86_64
+    locations:
+      - Test Lab
+    organizations:
+      - Acme Enterprises
+    activation_keys: AK_Test_RHEL_9
+
+  - parent: HG_Test
+    name: HG_Test-RHEL-9-Base
+
+  - parent: HG_Test/HG_Test-RHEL-9-Base
+    name: HG_Test-RHEL-9-Apps
 
 #
 # Satellite Capsule Settings

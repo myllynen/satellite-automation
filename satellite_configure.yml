@@ -7,6 +7,7 @@
     # Set to false to apply initial pre-sync config only
     satellite_full_config: true
     # Set to false to avoid publishing new content views
+    # or use publish_only_if_needed via Katello API
     satellite_content_view_publish: true
 
   roles:
@@ -25,8 +26,6 @@
       vars:
         satellite_content_views: "{{ satellite_content_view_promotions_testing }}"
     - role: redhat.satellite.activation_keys
-      when: satellite_full_config | bool
-    - role: redhat.satellite.hostgroups
       when: satellite_full_config | bool
 
   post_tasks:
@@ -59,3 +58,10 @@
       when:
         - satellite_full_config | bool
         - item.name in satellite_capsules.json.results | map(attribute='name')
+
+    - name: Configure Host Groups
+      ansible.builtin.include_role:
+        name: redhat.satellite.hostgroups
+      when:
+        - satellite_full_config | bool
+        - satellite_capsules.json.results | map(attribute='name') | length > 1

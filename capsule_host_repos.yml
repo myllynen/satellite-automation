@@ -25,6 +25,7 @@
         validate_certs: "{{ satellite_validate_certs }}"
         insecure: "{{ not satellite_validate_certs }}"
         jwt_expiration: 1
+        #smart_proxy: satellite.example.com
         activation_keys:
           - AK_Test_RHEL_9_Capsule
         #hostgroup: HG_Test
@@ -32,12 +33,17 @@
         setup_remote_execution: false
         setup_remote_execution_pull: false
         setup_container_registry_certs: true
+        #remote_execution_interface: net0
         update_packages: false
         # https://github.com/theforeman/foreman-ansible-modules/issues/1975
         #packages:
         #  - foreman_scap_client_bash
         #  - katello-host-tools-tracer
-        packages: foreman_scap_client_bash katello-host-tools-tracer
+        #  - katello-pull-transport-migrate
+        packages: >
+          foreman_scap_client_bash
+          katello-host-tools-tracer
+          katello-pull-transport-migrate
       register: registration_command
       delegate_to: localhost
       run_once: true
