@@ -3,16 +3,6 @@
   hosts: all
   become: true
   gather_facts: true
-  vars:
-    rhc_repositories:
-      # https://github.com/linux-system-roles/rhc/issues/143
-      #- {name: '*', state: disabled}
-      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-baseos-rpms
-      - name: rhel-{{ ansible_facts.distribution_major_version }}-for-x86_64-appstream-rpms
-      - name: satellite-client-6-for-rhel-{{ ansible_facts.distribution_major_version }}-x86_64-rpms
-    rhc_insights:
-      state: absent
-
   tasks:
     - name: Generate registration command
       redhat.satellite.registration_command:
@@ -23,8 +13,8 @@
         insecure: "{{ not satellite_validate_certs }}"
         jwt_expiration: 1
         smart_proxy: capsule1.example.com
-        activation_keys:
-          - AK_Test_RHEL_9
+        #activation_keys:
+        #  - AK_Test_RHEL_9
         hostgroup: HG_Test
         setup_insights: false
         setup_remote_execution: false
@@ -50,7 +40,3 @@
       ansible.builtin.shell:
         cmd: "{{ registration_command.registration_command }}"
       changed_when: true
-
-    - name: Configure host repositories
-      ansible.builtin.include_role:
-        name: redhat.rhel_system_roles.rhc
