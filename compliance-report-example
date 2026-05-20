@@ -1,6 +1,19 @@
 #!/bin/sh
+#
+# A simple example script to report host compliance changes
+#
+# $ ./compliance-report-example client1.example.com
+# ------------------------------------------------------------------------------------------------------------------------
+# 1      | 2026-05-18 12:11:40 UTC | 304    | 75     | 0      | [BASELINE]        (RHEL 9 CIS Server Level 1 - Custom)
+# 3      | 2026-05-18 12:24:55 UTC | 275    | 0      | 0      | [CHANGED! DRIFT]  (RHEL 9 CIS Server Level 1 - Custom)
+# 8      | 2026-05-18 12:42:18 UTC | 311    | 68     | 0      | [CHANGED! DRIFT]  (RHEL 9 CIS Server Level 1 - Custom)
 
-TARGET_HOST="client1.example.com"
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <hostname>" 1>&2
+  exit 1
+fi
+
+TARGET_HOST="$1"
 
 hammer --csv arf-report list \
   --search "host = $TARGET_HOST" \
@@ -16,7 +29,7 @@ hammer --csv arf-report list \
     NR == 1 {
       # Map variables based on Hammer output
       p_pass=$4; p_fail=$5; p_oth=$6
-      policy=$3; gsub(/"/, "", policy) # Clean up any encapsulating quotes
+      policy=$3; gsub(/"/, "", policy)
 
       printf "%-6s | %-23s | %-6s | %-6s | %-6s | \033[1;34m%-17s\033[0m (%s)\n", $1, $2, $4, $5, $6, "[BASELINE]", policy
       next
