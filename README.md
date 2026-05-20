@@ -96,53 +96,67 @@ Satellite, and install and sync Capsules:
 # Edit inventory and settings to suite local environment
 vi inventory vault_satellite.yml
 vi vars_satellite.yml vars_manifest.yml vars_capsule.yml vars_config.yml
+
 # Configure connected Satellite host repositories
 # This requires RHEL system roles to be installed on the current host
 # If RHEL system roles not available or in a disconnected environment,
 # configure the required repos manually using subscription-manager
 ansible-playbook -i inventory satellite_host_repos.yml \
   -e @vault_satellite.yml
+
 # Example to prepare Satellite host for installation,
 # make sure to review SSH/user config before applying
 vi satellite_host_prepare.yml
 ansible-playbook -i inventory -l satellite satellite_host_prepare.yml
+
 # Install Red Hat Satellite
 ansible-playbook -i inventory satellite_install.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
+
 # Upload or refresh manifest
 ansible-playbook -i inventory satellite_manifest.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_manifest.yml
+
 # Apply initial Satellite configuration, including products and repos
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml \
   -e satellite_full_config=false
+
 # Sync enabled repositories on Satellite
 ansible-playbook -i inventory satellite_sync_repos.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
+
 # Apply full Satellite configuration, including AKs, CVs, and CCVs
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
+
 # Configure Capsule hosts repositories using Satellite
 # This requires RHEL system roles to be installed on the current host
 # If RHEL system roles not available, configure the required repos manually
 ansible-playbook -i inventory capsule_host_repos.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
+
 # Example to prepare Capsule hosts for installation,
 # make sure to review SSH/user config before applying
 vi satellite_host_prepare.yml
 ansible-playbook -i inventory -l capsules satellite_host_prepare.yml
+
 # Install Satellite Capsules
 ansible-playbook -i inventory capsule_install.yml \
   -e @vars_capsule.yml
+
 # Apply full Satellite configuration, including Capsules and HGs
 ansible-playbook -i inventory satellite_configure.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
   -e satellite_content_view_publish=false
+
 # Sync Capsules from Satellite
 ansible-playbook -i inventory satellite_sync_capsules.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
+
 # Update Satellite and Capsules as needed
 ansible-playbook -i inventory satellite_update.yml
+
 # Register and configure managed hosts
 ansible-playbook -i inventory -l clients client_host_repos.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
