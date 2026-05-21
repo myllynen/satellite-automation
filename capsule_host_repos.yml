@@ -5,6 +5,7 @@
   gather_facts: true
   tasks:
     - name: Generate registration command
+      become: false
       redhat.satellite.registration_command:
         username: "{{ satellite_username }}"
         password: "{{ satellite_password }}"
