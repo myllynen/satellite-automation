@@ -60,8 +60,11 @@
         - item.name in satellite_capsules.json.results | map(attribute='name')
 
     - name: Configure Host Groups
+      vars:
+        installed_capsules: "{{ satellite_capsules.json.results | map(attribute='name') }}"
+        internal_capsule_count: "{{ 1 if 'iop-gateway' not in installed_capsules else 2 }}"
       ansible.builtin.include_role:
         name: redhat.satellite.hostgroups
       when:
         - satellite_full_config | bool
-        - satellite_capsules.json.results | map(attribute='name') | length > 1
+        - installed_capsules | length > internal_capsule_count | int
