@@ -5,7 +5,6 @@
   gather_facts: true
   tasks:
     - name: Generate registration command
-      become: false
       redhat.satellite.registration_command:
         username: "{{ satellite_username }}"
         password: "{{ satellite_password }}"
@@ -33,6 +32,7 @@
       register: registration_command
       delegate_to: localhost
       run_once: true
+      become: false
 
     - name: Register Capsule to Satellite
       # noqa: command-instead-of-shell
