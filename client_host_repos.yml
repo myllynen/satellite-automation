@@ -16,7 +16,7 @@
         #activation_keys:
         #  - AK_Test_RHEL_9
         hostgroup: HG_Test
-        setup_insights: false
+        setup_insights: true
         setup_remote_execution: false
         setup_remote_execution_pull: true
         setup_container_registry_certs: true
@@ -26,11 +26,9 @@
         #packages:
         #  - foreman_scap_client_bash
         #  - katello-host-tools-tracer
-        #  - katello-pull-transport-migrate
         packages: >
           foreman_scap_client_bash
           katello-host-tools-tracer
-          katello-pull-transport-migrate
       register: registration_command
       delegate_to: localhost
       run_once: true
