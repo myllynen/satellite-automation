@@ -1,5 +1,5 @@
 [localhost]
-localhost ansible_connection=local
+127.0.0.1 ansible_connection=local
 
 [satellite]
 satellite.example.com

@@ -9,8 +9,8 @@ satellite_installer_timeout: 1800
 
 satellite_server_url: https://satellite.example.com
 
-satellite_organization: Acme Enterprises
-satellite_location: Test Lab
+satellite_organization: Example Org
+satellite_location: Main Site
 
 satellite_validate_certs: false
 

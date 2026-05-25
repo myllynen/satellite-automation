@@ -43,16 +43,17 @@
       - bash-completion
       - bind-utils
       - curl
+      - dnf-plugins-core
       - fapolicyd
       - firewalld
       - man-pages
+      - mokutil
       - nano
       - openssh-clients
       - psmisc
       - rsync
       - sos
       - tar
-      - tpm2-tools
       - zstd
     packages_install_weak_deps: true
     packages_install_display_results: true

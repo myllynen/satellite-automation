@@ -1,6 +1,6 @@
 # Red Hat Satellite configuration as code using redhat.satellite
 #
-# For available settings and their current default values see:
+# For available settings and their current/default values see:
 # https://satellite.example.com/api/settings/?per_page=1000
 
 #
@@ -124,6 +124,7 @@ satellite_sync_plans:
   - name: Daily Red Hat repository sync
     interval: daily
     # Must use UTC timestamp for idempotency
+    # https://github.com/theforeman/foreman-ansible-modules/issues/1804
     sync_date: 2026-01-03 01:02:00 +0000
     enabled: true
     products:
@@ -134,11 +135,11 @@ satellite_sync_plans:
 # Satellite Lifecycle Environments
 #
 satellite_lifecycle_environments:
-  - name: LE_Testing
-    prior: Library
+  - prior: Library
+    name: LE_Testing
 
-  - name: LE_Production
-    prior: LE_Testing
+  - prior: LE_Testing
+    name: LE_Production
 
 #
 # Satellite Content Views - definitions
@@ -214,7 +215,7 @@ satellite_activation_keys:
     content_overrides:
       - label: satellite-client-6-for-rhel-9-x86_64-rpms
         override: enabled
-      - label: Acme_Enterprises_Microsoft_Packages_for_RHEL_Microsoft_Packages_for_RHEL_9
+      - label: Example_Org_Microsoft_Packages_for_RHEL_Microsoft_Packages_for_RHEL_9
         override: enabled
     service_level: Self-Support
     purpose_usage: Development/Test
@@ -240,7 +241,7 @@ satellite_activation_keys:
 satellite_hostgroups:
   - parent: null
     name: HG_Test
-    organization: Acme Enterprises
+    organization: Example Org
     content_source: capsule1.example.com
     lifecycle_environment: LE_Testing
     content_view: CV_RHEL_9
@@ -248,9 +249,9 @@ satellite_hostgroups:
     domain: example.com
     architecture: x86_64
     locations:
-      - Test Lab
+      - Main Site
     organizations:
-      - Acme Enterprises
+      - Example Org
     activation_keys: AK_Test_RHEL_9
 
   - parent: HG_Test

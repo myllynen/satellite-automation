@@ -29,7 +29,7 @@
         method: POST
         body_format: json
         body:
-          # Set check for Complete Sync
+          # Skip check for Complete Sync
           skip_metadata_check: "{{ satellite_capsule_complete_sync | bool }}"
         status_code:
           - 202
