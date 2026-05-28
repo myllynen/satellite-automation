@@ -155,7 +155,8 @@ ansible-playbook -i inventory satellite_sync_capsules.yml \
   -e @vault_satellite.yml -e @vars_satellite.yml
 
 # Update Satellite and Capsules as needed
-ansible-playbook -i inventory satellite_update.yml
+ansible-playbook -i inventory satellite_update.yml \
+  -e @vault_satellite.yml -e @vars_satellite.yml
 
 # Register and configure managed hosts
 ansible-playbook -i inventory -l clients client_host_repos.yml \

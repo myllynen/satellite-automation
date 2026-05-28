@@ -58,15 +58,16 @@
     - name: Check Red Hat container registry login status
       ansible.builtin.command: >
         podman login --authfile /etc/foreman/registry-auth.json --get-login registry.redhat.io
-      register: podman_login
+      register: podman_check
       failed_when: false
       changed_when: false
       when:
+        - inventory_hostname in groups.satellite
         - "'--enable-iop' in satellite_installer_options"
         - (satellite_info.msg is defined and 'Connection refused' in satellite_info.msg) or
           (satellite_info.status.result is defined and satellite_info.status.result != 'ok')
 
-    - name: Login to Red Hat container registry for Lightspeed installation
+    - name: Login to Red Hat container registry
       no_log: true
       ansible.builtin.shell: >
         set -o pipefail &&
@@ -76,8 +77,8 @@
         registry.redhat.io
       changed_when: true
       when:
-        - podman_login is not skipped
-        - "'not logged into' in podman_login.stderr"
+        - podman_check is not skipped
+        - "'not logged in' in podman_check.stderr"
 
     - name: Install Satellite
       ansible.builtin.include_role:

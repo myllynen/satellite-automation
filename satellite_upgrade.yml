@@ -41,6 +41,29 @@
           Only the target version
           repositories must be enabled prior to the update.
 
+    - name: Check Red Hat container registry login status
+      ansible.builtin.command: >
+        podman login --authfile /etc/foreman/registry-auth.json --get-login registry.redhat.io
+      register: podman_check
+      failed_when: false
+      changed_when: false
+      when:
+        - inventory_hostname in groups.satellite
+        - "'--enable-iop' in satellite_installer_options"
+
+    - name: Login to Red Hat container registry
+      no_log: true
+      ansible.builtin.shell: >
+        set -o pipefail &&
+        echo '{{ satellite_rhsm_password }}' |
+        podman login --authfile /etc/foreman/registry-auth.json
+        --username {{ satellite_rhsm_username }} --password-stdin
+        registry.redhat.io
+      changed_when: true
+      when:
+        - podman_check is not skipped
+        - "'not logged in' in podman_check.stderr"
+
     - name: Check updates
       check_mode: false
       ansible.builtin.command: satellite-maintain packages check-update --plaintext
