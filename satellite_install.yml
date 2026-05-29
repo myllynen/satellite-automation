@@ -4,45 +4,23 @@
   become: true
   gather_facts: true
   tasks:
-    - name: Fail if invalid Satellite URL defined
-      ansible.builtin.fail:
-        msg: "Satellite URL must start with http:// or https://."
-      when:
-        - not satellite_server_url | default(true) or
-          (not satellite_server_url.startswith("http://") and
-           not satellite_server_url.startswith("https://"))
+    - name: Verify correct Satellite URL format
+      ansible.builtin.assert:
+        that:
+          - satellite_server_url is defined
+          - satellite_server_url is string
+          - satellite_server_url.startswith("http://") or
+            satellite_server_url.startswith("https://")
+        quiet: true
+        fail_msg: "Satellite URL must start with http:// or https://."
 
     - name: Install required packages
       ansible.builtin.dnf:
         name:
-          - firewalld
           - podman
           - satellite
           - sos
         state: present
-
-    - name: Enable firewalld service
-      ansible.builtin.service:
-        name: firewalld
-        enabled: true
-
-    - name: Start firewalld service
-      ansible.builtin.service:
-        name: firewalld
-        state: started
-
-    - name: Configure Satellite firewall
-      vars:
-        satellite_firewall_services:
-          - RH-Satellite-6
-          - "{{ 'mqtt' if satellite_firewall_allow_mqtt | bool else '' }}"
-      ansible.posix.firewalld:
-        service: "{{ item }}"
-        zone: "{{ satellite_firewall_zone }}"
-        state: enabled
-        immediate: true
-        permanent: true
-      loop: "{{ satellite_firewall_services | select }}"
 
     - name: Check Satellite status
       redhat.satellite.status_info:

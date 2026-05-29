@@ -18,34 +18,9 @@
     - name: Install required packages
       ansible.builtin.dnf:
         name:
-          - firewalld
-          - podman
           - satellite-capsule
           - sos
         state: present
-
-    - name: Enable firewalld service
-      ansible.builtin.service:
-        name: firewalld
-        enabled: true
-
-    - name: Start firewalld service
-      ansible.builtin.service:
-        name: firewalld
-        state: started
-
-    - name: Configure Satellite Capsule firewall
-      vars:
-        capsule_firewall_services:
-          - RH-Satellite-6-capsule
-          - "{{ 'mqtt' if satellite_capsule_firewall_allow_mqtt | bool else '' }}"
-      ansible.posix.firewalld:
-        service: "{{ item }}"
-        zone: "{{ satellite_capsule_firewall_zone }}"
-        state: enabled
-        immediate: true
-        permanent: true
-      loop: "{{ capsule_firewall_services | select }}"
 
     - name: Check Satellite Capsule status
       ansible.builtin.uri:

@@ -36,6 +36,17 @@
     boot_parameters_reboot: false
     etc_hosts_self_add: true
     etc_hosts_omit_entries: ipv6
+    # For more advanced firewall configuration
+    # use redhat.rhel_system_roles.firewall
+    firewall_enable: true
+    firewall_default_zone: public
+    firewall_open_ports:
+      - 8000/tcp
+      - 9090/tcp
+    firewall_open_services:
+      - https
+      - mqtt
+    firewall_close_unconfigured: true
     guest_agent_enable: true
     guest_agent_remove_firmware: true
     ipv6_setup_enable: false
@@ -97,6 +108,8 @@
     - myllynen.rhel_ansible_roles.system_locale
     - myllynen.rhel_ansible_roles.system_update
     - myllynen.rhel_ansible_roles.accounts_local
+    - myllynen.rhel_ansible_roles.firewall
+    #- redhat.rhel_system_roles.firewall
     - myllynen.rhel_ansible_roles.packages_install
     - myllynen.rhel_ansible_roles.performance_tuning
     - myllynen.rhel_ansible_roles.security_hardening

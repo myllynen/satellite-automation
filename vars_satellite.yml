@@ -14,11 +14,8 @@ satellite_location: Main Site
 
 satellite_validate_certs: false
 
-satellite_firewall_zone: public
-
-# Needed for pull mode remote execution
-satellite_firewall_allow_mqtt: true
-
+# Use satellite_host_prepare.yml or other playbook
+# to open the needed ports and services in firewall
 satellite_installer_options:
   - --foreman-initial-admin-username "{{ satellite_username }}"
   - --foreman-initial-admin-password '{{ satellite_password }}'
