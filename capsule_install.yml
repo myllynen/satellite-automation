@@ -64,4 +64,5 @@
     - name: Run post-install health check
       ansible.builtin.command: satellite-maintain health check --plaintext
       changed_when: false
+      # noqa: no-handler
       when: capsule_install is changed

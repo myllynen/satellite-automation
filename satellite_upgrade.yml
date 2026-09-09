@@ -138,6 +138,7 @@
     - name: Run post-upgrade health check
       ansible.builtin.command: satellite-maintain health check --plaintext
       changed_when: false
+      # noqa: no-handler
       when: package_install is changed
 
     - name: Pause after updates

@@ -5,5 +5,5 @@ satellite_password: Foobar_12
 # Red Hat Customer Portal credentials
 # Needed when downloading manifest and
 # when registering Satellite to RH CDN
-#satellite_rhsm_username:
-#satellite_rhsm_password:
+# satellite_rhsm_username:
+# satellite_rhsm_password:

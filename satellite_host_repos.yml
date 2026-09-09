@@ -11,16 +11,16 @@
         # These should come from vault
         username: "{{ satellite_rhsm_username }}"
         password: "{{ satellite_rhsm_password }}"
-    #rhc_proxy:
-    #  hostname: "proxy-hostname"
-    #  scheme: http
-    #  port: 4321
-    #  # These should come from vault
-    #  username: "proxy-hostname"
-    #  password: "proxy-password"
+#    rhc_proxy:
+#      hostname: "proxy-hostname"
+#      scheme: http
+#      port: 4321
+      # These should come from vault
+#      username: "proxy-hostname"
+#      password: "proxy-password"
     # Leave unset to connect to Red Hat CDN
-    #rhc_server:
-    #  hostname:
+#    rhc_server:
+#      hostname:
     rhc_repositories:
       # https://github.com/linux-system-roles/rhc/issues/143
       - {name: '*', state: disabled}

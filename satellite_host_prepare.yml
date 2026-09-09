@@ -20,11 +20,11 @@
         authorized_keys:
           - ssh-ed25519 ... id_ed25519.pub
     accounts_local_password_encrypted: false
-    #accounts_local_users_groups:
-    #  - name: admin
-    #    groups:
-    #      - sshadmin
-    #    append: false
+#    accounts_local_users_groups:
+#      - name: admin
+#        groups:
+#          - sshadmin
+#        append: false
     boot_parameters_enable:
       - quiet
     boot_parameters_disable:
@@ -71,12 +71,12 @@
     packages_remove:
       - gofer
       - katello-agent
-      #- puppet-agent
+      # - puppet-agent
       - rhn*
       - telnet-server
       - bluez
       - flashrom
-      #- '*fonts*'
+      # - '*fonts*'
       - gawk-all-langpacks
       - gcc*
       - geolite*
@@ -87,14 +87,14 @@
       - NetworkManager-team
       - NetworkManager-tui
       - python3-perf
-      #- sssd*
-      #- libsss*
+      # - sssd*
+      # - libsss*
     packages_remove_autoremove: false
     packages_remove_display_results: true
     service_state_enable:
       - firewalld.service
-    #sshd_options:
-    #  AllowGroups: sshadmin
+#    sshd_options:
+#      AllowGroups: sshadmin
     system_hostname: "{{ ansible_facts.fqdn | lower }}"
     system_locale: auto
     system_update_reboot_policy: when_updated
@@ -109,7 +109,7 @@
     - myllynen.rhel_ansible_roles.system_update
     - myllynen.rhel_ansible_roles.accounts_local
     - myllynen.rhel_ansible_roles.firewall
-    #- redhat.rhel_system_roles.firewall
+    # - redhat.rhel_system_roles.firewall
     - myllynen.rhel_ansible_roles.packages_install
     - myllynen.rhel_ansible_roles.performance_tuning
     - myllynen.rhel_ansible_roles.security_hardening

@@ -91,18 +91,18 @@ satellite_products:
 
   - name: Red Hat Enterprise Linux for x86_64
     repository_sets:
-      #- name: Red Hat CodeReady Linux Builder for RHEL 9 x86_64 (RPMs)
-      #  releasever: 9
-      #- name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)
-      #  releasever: 9.7
+      # - name: Red Hat CodeReady Linux Builder for RHEL 9 x86_64 (RPMs)
+      #   releasever: 9
+      # - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)
+      #   releasever: 9.7
       - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
         releasever: 9
-      #- name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)
-      #  releasever: 9.7
+      # - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)
+      #   releasever: 9.7
       - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
         releasever: 9
-      #- name: Red Hat Enterprise Linux 9 for x86_64 - Extensions (RPMs)
-      #  releasever: 9
+      # - name: Red Hat Enterprise Linux 9 for x86_64 - Extensions (RPMs)
+      #   releasever: 9
 
       - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
       - name: Red Hat Satellite Maintenance 6.19 for RHEL 9 x86_64 (RPMs)
@@ -151,14 +151,14 @@ satellite_lifecycle_environments:
 satellite_content_view_definitions:
   - name: CV_RHEL_9
     repositories:
-      #- name: Red Hat CodeReady Linux Builder for RHEL 9 x86_64 RPMs
-      #  product: Red Hat Enterprise Linux for x86_64
+      # - name: Red Hat CodeReady Linux Builder for RHEL 9 x86_64 RPMs
+      #   product: Red Hat Enterprise Linux for x86_64
       - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream RPMs 9
         product: Red Hat Enterprise Linux for x86_64
       - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS RPMs 9
         product: Red Hat Enterprise Linux for x86_64
-      #- name: Red Hat Enterprise Linux 9 for x86_64 - Extensions RPMs 9
-      #  product: Red Hat Enterprise Linux for x86_64
+      # - name: Red Hat Enterprise Linux 9 for x86_64 - Extensions RPMs 9
+      #   product: Red Hat Enterprise Linux for x86_64
       - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs
         product: Red Hat Enterprise Linux for x86_64
     solve_dependencies: false

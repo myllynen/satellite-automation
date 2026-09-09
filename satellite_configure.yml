@@ -29,6 +29,7 @@
       when: satellite_full_config | bool
 
   post_tasks:
+    # noqa: no-log-password
     - name: Get list of Capsules
       ansible.builtin.uri:
         url: "{{ satellite_server_url }}/api/v2/smart_proxies"
@@ -40,6 +41,7 @@
       register: satellite_capsules
       changed_when: false
 
+    # noqa: no-log-password
     - name: Configure Satellite Capsule
       redhat.satellite.smart_proxy:
         server_url: "{{ satellite_server_url }}"
