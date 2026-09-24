@@ -147,7 +147,7 @@ ansible-playbook -i inventory capsule_install.yml \
 
 # Apply full Satellite configuration, including Capsules and HGs
 ansible-playbook -i inventory satellite_configure.yml \
-  -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml
+  -e @vault_satellite.yml -e @vars_satellite.yml -e @vars_config.yml \
   -e satellite_content_view_publish=false
 
 # Sync Capsules from Satellite

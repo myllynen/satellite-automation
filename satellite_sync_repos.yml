@@ -4,7 +4,7 @@
   become: false
   gather_facts: false
   tasks:
-    # noqa_ no-log-password
+    # noqa: no-log-password
     - name: Get product and repository information
       redhat.satellite.resource_info:
         server_url: "{{ satellite_server_url }}"
@@ -15,7 +15,7 @@
         resource: products
       register: available_products
 
-    # noqa_ no-log-password
+    # noqa: no-log-password
     - name: Sync enabled product repositories
       redhat.satellite.repository_sync:
         server_url: "{{ satellite_server_url }}"

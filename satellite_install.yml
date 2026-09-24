@@ -48,11 +48,10 @@
     - name: Login to Red Hat container registry
       no_log: true
       ansible.builtin.shell: >
-        set -o pipefail &&
-        echo '{{ satellite_rhsm_password }}' |
         podman login --authfile /etc/foreman/registry-auth.json
         --username {{ satellite_rhsm_username }} --password-stdin
         registry.redhat.io
+        <<< '{{ satellite_rhsm_password }}'
       changed_when: true
       when:
         - podman_check is not skipped

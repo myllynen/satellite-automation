@@ -217,13 +217,11 @@ satellite_content_view_promotions_testing:
 # Satellite Activation Keys
 #
 satellite_activation_keys:
-  - name: AK_Test_RHEL_9_Microsoft
+  - name: AK_Test_RHEL_9
     lifecycle_environment: LE_Testing
-    content_view: CCV_RHEL_9_Microsoft
+    content_view: CV_RHEL_9
     content_overrides:
       - label: satellite-client-6-for-rhel-9-x86_64-rpms
-        override: enabled
-      - label: Example_Org_Microsoft_Packages_for_RHEL_Microsoft_Packages_for_RHEL_9
         override: enabled
     service_level: Self-Support
     purpose_usage: Development/Test
@@ -238,6 +236,18 @@ satellite_activation_keys:
       - label: satellite-capsule-6.19-for-rhel-9-x86_64-rpms
         override: enabled
       - label: satellite-maintenance-6.19-for-rhel-9-x86_64-rpms
+        override: enabled
+    service_level: Self-Support
+    purpose_usage: Development/Test
+    purpose_role: Red Hat Enterprise Linux Server
+
+  - name: AK_Test_RHEL_9_Microsoft
+    lifecycle_environment: LE_Testing
+    content_view: CCV_RHEL_9_Microsoft
+    content_overrides:
+      - label: satellite-client-6-for-rhel-9-x86_64-rpms
+        override: enabled
+      - label: Example_Org_Microsoft_Packages_for_RHEL_Microsoft_Packages_for_RHEL_9
         override: enabled
     service_level: Self-Support
     purpose_usage: Development/Test
